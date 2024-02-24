@@ -1,0 +1,12 @@
+{
+  "extends": ["astro/tsconfigs/strict", "../../tsconfig.json"],
+  "include": [
+    "src"
+  ],
+  "typeRoots": ["./node_modules/@types", "./types"],
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": true,
+    "allowJs": true,
+  }
+}

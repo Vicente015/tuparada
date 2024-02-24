@@ -1,0 +1,12 @@
+{
+  "extends": ["@tsconfig/node-lts/tsconfig.json", "../../tsconfig.json"],
+  "include": ["src"],
+  "typeRoots": ["./node_modules/@types", "./types"],
+  "compilerOptions": {
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "composite": true,
+    "outDir": "dist",
+    "allowJs": true
+  }
+}

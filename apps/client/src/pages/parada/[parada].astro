@@ -1,0 +1,17 @@
+---
+import StopWrapper from '../../components/StopWrapper'
+import Layout from '../../layouts/Layout.astro'
+
+export function getStaticPaths () {
+  return Array.from(Array(999).keys()).map(number => ({
+    params: { parada: number.toString() }
+  }))
+}
+
+const { parada } = Astro.params
+const stop = parseInt(parada)
+---
+
+<Layout title="Parada">
+  <StopWrapper client:load stop={stop}/>
+</Layout>
