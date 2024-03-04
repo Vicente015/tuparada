@@ -1,18 +1,16 @@
 import * as Ariakit from '@ariakit/react'
-import { pascalCase } from 'case-anything'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useMemo, useState } from 'react'
-import { trpc } from '../utils/trpc'
+import stops from '../../../server/src/data/paradas.json'
+// import { trpc } from '../utils/trpc.js'
 
 export default function SearchBar () {
-  const { data: stops } = trpc.paradas.list.useQuery()
+  // const { data: stops } = trpc.paradas.list.useQuery()
   const [searchValue, setSearchValue] = useState('')
   const matches = useMemo(() => {
-    const results = matchSorter(stops ?? [], searchValue, { keys: ['nombre', 'numero'] })
-    results.length = 10
-    return results.map(({ nombre, numero }) =>
-      ({ numero, nombre: pascalCase(nombre, { keep: [' '] }) })
-    )
+    // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
+    const results = matchSorter(stops, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
+    return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
 
   return (
@@ -25,18 +23,18 @@ export default function SearchBar () {
         Buscador de paradas
       </Ariakit.ComboboxLabel>
       <Ariakit.Combobox placeholder="Mesa y López" className="w-72 p-2 bg-neutral-500 placeholder-neutral-100 text-neutral-50 shadow-md rounded-lg" />
-      <Ariakit.ComboboxPopover gutter={3} sameWidth className="flex flex-col gap-1 p-2 bg-neutral-500 text-neutral-50 shadow-lg rounded-md">
+      <Ariakit.ComboboxPopover gutter={3} sameWidth className="max-h-96 overflow-y-scroll overflow-x-hidden flex flex-col gap-1 p-1 bg-neutral-500 text-neutral-50 shadow-lg rounded-md">
         {(matches.length > 0)
           ? (
-              matches.map(({ nombre, numero }) => (
+              matches.map(({ id, name }) => (
                 <Ariakit.ComboboxItem
-                  key={numero}
-                  className="text-left rounded-sm"
+                  key={id}
+                  className=""
                 >
-                  <p className='p-1 flex flex-row gap-2'>
-                    <span className="p-1 bg-neutral-700 h-fit font-mono text-sm">{String(numero).padStart(3, '0')}</span>
-                    {nombre}
-                  </p>
+                  <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
+                    <span className="min-w-[4ch] h-fit text-center p-1 bg-neutral-700 font-mono text-sm">{id}</span>
+                    <p className='w-auto h-auto text-wrap break-words'>{name}</p>
+                  </a>
                 </Ariakit.ComboboxItem>
               ))
             )

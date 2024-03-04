@@ -1,5 +1,5 @@
 ---
-import SearchBarWrapper from '../components/SearchBarWrapper'
+import SearchBar from '../components/SearchBar.jsx'
 import Layout from '../layouts/Layout.astro';
 ---
 
@@ -10,7 +10,7 @@ import Layout from '../layouts/Layout.astro';
   </header>
   <main class="bg-orange-200 h-screen py-4">
     <section class="max-w-[80ch] m-auto flex flex-col items-center justify-center">
-      <SearchBarWrapper client:load/>
+      <SearchBar client:load/>
     </section>
   </main>
 </Layout>

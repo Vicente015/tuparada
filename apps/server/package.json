@@ -26,6 +26,7 @@
   "devDependencies": {
     "@tsconfig/node-lts": "^20.1.1",
     "@tsconfig/strictest": "^2.0.3",
+    "@types/got": "^9.6.12",
     "@types/node": "^20.11.17",
     "esbuild": "^0.20.0"
   }

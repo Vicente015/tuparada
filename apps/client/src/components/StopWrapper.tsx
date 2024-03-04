@@ -1,5 +1,5 @@
-import Stop from './Stop'
-import Wrapper from './Wrapper'
+import Stop from './Stop.jsx'
+import Wrapper from './Wrapper.jsx'
 
 const StopWrapper = ({ stop }: { stop: number }) => {
   return (
