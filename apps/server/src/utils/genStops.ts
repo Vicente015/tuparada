@@ -64,10 +64,10 @@ async function genStopsJSON () {
   const nextExampleElementIndex = APIStops.findIndex((stop) => stop.numero === 'PAR')
   // Acorta la longitud del array
   APIStops = APIStops.slice(0, nextExampleElementIndex)
-  const transitData = getDataFromTransit()
+  const transitStops = getDataFromTransit()
 
   const finalData = APIStops.map(({ nombre, numero }) => {
-    const stopFoundInTransit = transitData.find(({ id }) => id === parseInt(numero))
+    const stopFoundInTransit = transitStops.find(({ id }) => id === parseInt(numero))
     return {
       id: numero,
       name: nombre,
