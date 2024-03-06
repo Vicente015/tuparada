@@ -24,6 +24,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
+    '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     'sort/object-properties': 'off',
     'react/react-in-jsx-scope': 'off',

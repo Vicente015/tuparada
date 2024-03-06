@@ -12,8 +12,8 @@ const Stop: React.FC<Props> = ({ stop }) => {
 
   const uniqueLines = useMemo(() => {
     return Array.from(
-      new Set(data?.lineas.map(({ numero }) => numero))
-    ).map((numero) => ({ numero, color: data?.lineas.find(searchLine => searchLine.numero === numero)?.color }))
+      new Set(data?.lines.map(({ number }) => number))
+    ).map((number) => ({ number, color: data?.lines.find(searchLine => searchLine.number === number)?.color }))
   }, [data])
 
   useEffect(() => {
@@ -33,19 +33,19 @@ const Stop: React.FC<Props> = ({ stop }) => {
         <section className='bg-neutral-400 p-4'>
           <div className='flex flex-row gap-2'>
             <h4 className='text-neutral-200 font-mono'>{stop}</h4>
-            <h2 className='text-neutral-50 font-bold'>{data?.nombre}</h2>
+            <h2 className='text-neutral-50 font-bold'>{data?.name}</h2>
           </div>
           <div className='flex flex-row gap-1'>
-            {uniqueLines.map(({ color, numero }) => (
-              <span key={numero} className='px-2 py-1 bg-gray-400 text-neutral-50 font-bold shadow-sm' style={{ backgroundColor: `#${color}` }}>{numero}</span>
+            {uniqueLines.map(({ color, number }) => (
+              <span key={number} className='px-2 py-1 bg-gray-400 text-neutral-50 font-bold shadow-sm' style={{ backgroundColor: `#${color}` }}>{number}</span>
             ))}
           </div>
           <div className='text-right'>
             <p className='text-sm text-neutral-600'>Última actualización: {lastUpdate.toLocaleString('es-es', { timeStyle: 'medium', dateStyle: 'medium' })}</p>
           </div>
         </section>
-        {data?.lineas.map(({ destino, llegada, numero }) => (
-          <p key={numero + destino}>{numero} - {destino} - {llegada}</p>
+        {data?.lines.map(({ arrival_time, destination, number }) => (
+          <p key={number + destination}>{number} - {destination} - {arrival_time}</p>
         ))}
       </main>
     </div>
