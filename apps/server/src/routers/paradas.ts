@@ -41,8 +41,8 @@ export const paradasRouter = router({
         `${Constants.API_URL}/parada/${input.id}`,
         {
           headers: { accept: 'application/json' },
-          retry: { retries: 1 },
-          json: true
+          retry: { limit: 3 },
+          responseType: 'json'
         }
       )
 

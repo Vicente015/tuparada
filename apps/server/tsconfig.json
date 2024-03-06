@@ -12,8 +12,8 @@
     "./types"
   ],
   "compilerOptions": {
-    "moduleResolution": "Node",
-    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
     "composite": true,
     "outDir": "dist",
     "allowJs": true
