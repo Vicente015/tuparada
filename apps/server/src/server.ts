@@ -1,4 +1,5 @@
 import { fastifyCaching } from '@fastify/caching'
+import cors from '@fastify/cors'
 import {
   fastifyTRPCPlugin,
   type FastifyTRPCPluginOptions
@@ -12,6 +13,9 @@ const server = fastify({
   maxParamLength: 5000
 })
 
+await server.register(cors, {
+  origin: 'https://localhost:3000'
+})
 await server.register(fastifyCaching,
   {
     privacy: fastifyCaching.privacy.PUBLIC,
