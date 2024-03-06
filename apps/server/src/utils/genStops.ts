@@ -51,7 +51,7 @@ function getDataFromTransit () {
 
 async function getDataFromAPI () {
   const APIStopsResponse = await got.get(`${Constants.API_URL}/paradas`, {
-    responseType: 'json',
+    json: true,
     headers: { accept: 'application/json' }
   })
   return APIStopsSchema.parse(APIStopsResponse.body)

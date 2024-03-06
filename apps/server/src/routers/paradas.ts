@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import got from 'got'
 import { z } from 'zod'
 import Constants from '../Constants.js'
-import stops from '../data/paradas.json'
+import stops from '../data/paradas.json' assert { type: 'json' }
 import { publicProcedure, router } from '../trpc.js'
 import getRouteColor from '../utils/getRouteColor.js'
 
@@ -41,8 +41,8 @@ export const paradasRouter = router({
         `${Constants.API_URL}/parada/${input.id}`,
         {
           headers: { accept: 'application/json' },
-          responseType: 'json',
-          retry: { limit: 1 }
+          retry: { retries: 1 },
+          json: true
         }
       )
 
