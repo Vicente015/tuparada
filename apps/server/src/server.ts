@@ -12,13 +12,17 @@ const server = fastify({
   maxParamLength: 5000
 })
 
-/* await server.register(fastifyCaching,
+await server.register(fastifyCaching,
   {
     privacy: fastifyCaching.privacy.PUBLIC,
-    expiresIn: 5000
+    expiresIn: 30
   }
 )
-*/
+
+/**
+ * Implementación del servidor HTTP
+ * - https://trpc.io/docs/server/adapters/fastify
+ */
 await server.register(fastifyTRPCPlugin, {
   prefix: '/trpc',
   trpcOptions: {

@@ -2,43 +2,43 @@ import { TRPCError } from '@trpc/server'
 import got from 'got'
 import { z } from 'zod'
 import Constants from '../Constants.js'
+import stops from '../data/paradas.json'
 import { publicProcedure, router } from '../trpc.js'
 import getRouteColor from '../utils/getRouteColor.js'
 
-// const minutesType = z.custom<`${number}min`>((val) => {
-//   return typeof val === 'string' ? /^\d+min$/.test(val) : false
-// })
-
-const inputSchema = z.object({
+const InputSchema = z.object({
   id: z.number().int().min(1).max(999)
 })
 
-const paradaSchema = z.object({
-  nombre: z.string(),
-  lineas: z.array(z.object({
-    destino: z.string(),
-    llegada: z.string(),
-    numero: z.string(),
+const OutputSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  lines: z.array(z.object({
+    destination: z.string(),
+    arrival_time: z.string(),
+    number: z.string(),
     color: z.string().optional()
   }))
 })
 
-// const paradasSchema = z.array(z.object({
-//   id: z.string(),
-//   name: z.string(),
-//   latitude: z.string(),
-//   longitude: z.string()
-// }))
+const APIResponseSchema = z.object({
+  nombre: z.string(),
+  lineas: z.array(z.object({
+    destino: z.string(),
+    llegada: z.string(),
+    numero: z.string()
+  }))
+})
 
 export const paradasRouter = router({
   get: publicProcedure
-    .input(inputSchema)
-    .output(paradaSchema.merge(inputSchema))
-    .mutation(async (opts) => {
-      const { input: { id } } = opts
-
+    .input(InputSchema)
+    .output(OutputSchema)
+    .mutation(async ({ input }) => {
       const response = await got.get(
-        `${Constants.API_URL}/parada/${id}`,
+        `${Constants.API_URL}/parada/${input.id}`,
         {
           headers: { accept: 'application/json' },
           responseType: 'json',
@@ -54,14 +54,22 @@ export const paradasRouter = router({
       }
 
       try {
-        // TODO: Podría añadir la ubicación de la parada con los datos de transit
-        const data = paradaSchema.parse(response.body)
-        const routesWithColor = data.lineas.map(({ color, ...propiedades }) => ({
-          color: getRouteColor(propiedades.numero),
-          ...propiedades
-        }))
-        data.lineas = routesWithColor
-        return { id, ...data }
+        const outputData = APIResponseSchema.parse(response.body)
+        const stopDataFromJSON = stops.find(({ id }) => parseInt(id) === input.id)
+        const stopProcessedData: z.infer<typeof OutputSchema> = {
+          id: input.id,
+          name: outputData.nombre,
+          latitude: stopDataFromJSON?.latitude != null ? parseFloat(stopDataFromJSON?.latitude) : undefined,
+          longitude: stopDataFromJSON?.longitude != null ? parseFloat(stopDataFromJSON?.longitude) : undefined,
+          lines: outputData.lineas.map(({ destino, llegada, numero }) => ({
+            color: getRouteColor(numero),
+            arrival_time: llegada,
+            destination: destino,
+            number: numero
+          }))
+
+        }
+        return stopProcessedData
       } catch (err) {
         console.error(err)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
