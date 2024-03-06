@@ -5,6 +5,7 @@ import Constants from '../Constants.js'
 import stops from '../data/paradas.json' assert { type: 'json' }
 import { publicProcedure, router } from '../trpc.js'
 import getRouteColor from '../utils/getRouteColor.js'
+const cache = new Map()
 
 const InputSchema = z.object({
   id: z.number().int().min(1).max(999)
@@ -36,16 +37,20 @@ export const paradasRouter = router({
   get: publicProcedure
     .input(InputSchema)
     .output(OutputSchema)
-    .mutation(async ({ input }) => {
+    .query(async ({ input }) => {
+      console.debug(input)
       const response = await got.get(
         `${Constants.API_URL}/parada/${input.id}`,
         {
           headers: { accept: 'application/json' },
-          retry: { limit: 3 },
-          responseType: 'json'
+          retry: { limit: 0 },
+          responseType: 'json',
+          cache,
+          cacheOptions: {
+            immutableMinTimeToLive: 1
+          }
         }
       )
-
       if (response.statusCode === 404) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
@@ -67,7 +72,6 @@ export const paradasRouter = router({
             destination: destino,
             number: numero
           }))
-
         }
         return stopProcessedData
       } catch (err) {

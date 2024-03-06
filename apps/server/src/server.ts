@@ -10,7 +10,8 @@ import { createContext } from './context.js'
 import { appRouter, type AppRouter } from './routers/_app.js'
 
 const server = fastify({
-  maxParamLength: 5000
+  maxParamLength: 5000,
+  logger: true
 })
 
 await server.register(cors, {
@@ -19,7 +20,8 @@ await server.register(cors, {
 await server.register(fastifyCaching,
   {
     privacy: fastifyCaching.privacy.PUBLIC,
-    expiresIn: 30
+    expiresIn: 10,
+    logLevel: 'debug'
   }
 )
 

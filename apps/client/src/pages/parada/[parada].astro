@@ -13,5 +13,5 @@ const stop = parseInt(parada)
 ---
 
 <Layout title="Parada">
-  <StopWrapper client:load stop={stop}/>
+  <StopWrapper client:only={'react'} stop={stop}/>
 </Layout>
