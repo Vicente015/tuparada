@@ -11,6 +11,7 @@
     "lint:fix": "eslint --fix --format=pretty --ext .js,.astro,.ts,.tsx,.jsx,.cjs ."
   },
   "dependencies": {
+    "geolib": "^3.3.4",
     "jsdom": "^24.0.0",
     "top-user-agents": "^2.1.10",
     "undici": "^6.6.2",

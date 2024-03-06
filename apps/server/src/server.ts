@@ -14,7 +14,7 @@ const server = fastify({
 })
 
 await server.register(cors, {
-  origin: 'https://localhost:3000'
+  origin: 'http://localhost:4321'
 })
 await server.register(fastifyCaching,
   {
