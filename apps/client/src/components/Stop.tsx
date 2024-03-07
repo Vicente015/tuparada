@@ -1,5 +1,4 @@
 import type { inferRouterOutputs } from '@trpc/server'
-import { ChevronLeft } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppRouter } from 'server/src/routers/_app'
 import { trpc } from '../utils/trpc'
@@ -10,7 +9,6 @@ interface Props {
 }
 
 const Stop: React.FC<Props> = ({ stop }) => {
-  console.debug(stop)
   const { data } = trpc.paradas.get.useQuery({ id: stop },
     {
       cacheTime: 25 * 1000,
@@ -22,7 +20,9 @@ const Stop: React.FC<Props> = ({ stop }) => {
   const uniqueLines = useMemo(() => {
     return Array.from(
       new Set(data?.lines.map(({ number }) => number))
-    ).map((number) => ({ number, color: data?.lines.find(searchLine => searchLine.number === number)?.color }))
+    )
+      .map((number) => ({ number, color: data?.lines.find(searchLine => searchLine.number === number)?.color }))
+      .sort((a, b) => parseInt(a.number) - parseInt(b.number))
   }, [data])
 
   useEffect(() => {
@@ -30,45 +30,42 @@ const Stop: React.FC<Props> = ({ stop }) => {
   }, [data])
 
   return (
-    <div className='max-w-[90ch] m-auto'>
-      <header className='bg-neutral-100 font-serif flex flex-row gap-4 items-center p-4'>
-        <a href="/">
-          <ChevronLeft className='text-neutral-700' size={28} />
-        </a>
-        <h2 className='text-2xl font-bold text-neutral-800 m-auto'>Próximas Guaguas</h2>
-      </header>
-      <main className='bg-neutral-200 h-screen'>
-        <section className='bg-neutral-300 p-4'>
-          <div className='flex flex-row gap-2 mb-1'>
-            <h4 className='text-neutral-800 text-lg font-mono'>{stop}</h4>
-            <h2 className='text-neutral-900 text-xl font-bold'>{data?.name}</h2>
-          </div>
-          <div className='flex flex-row gap-1'>
-            {uniqueLines.map(({ color, number }) => (
-              <span key={number} className='px-2 py-1 bg-gray-400 text-neutral-50 font-bold shadow-sm' style={{ backgroundColor: `#${color}` }}>{number}</span>
-            ))}
-          </div>
-          <div className='text-right'>
-            <p className='text-base text-neutral-600'>Última actualización: {lastUpdate.toLocaleString('es-es', { timeStyle: 'medium', dateStyle: 'medium' })}</p>
-          </div>
-        </section>
-        <section className='flex flex-col bg-neutral-200 h-full'>
-          <IncomingBus arrival_time='Llega en' destination='Destino' number='Línea'></IncomingBus>
-          {data?.lines.map((data, index) => (
-            <IncomingBus key={index} {...data}></IncomingBus>
+    <>
+      <section className='bg-neutral-200 p-4 max-w-[80ch] m-auto'>
+        <div className='flex flex-row gap-2 mb-1 items-center'>
+          <h4 className='text-neutral-800 text-lg font-mono'>{stop}</h4>
+          <h2 className='text-neutral-900 text-xl font-bold'>{data?.name}</h2>
+        </div>
+        <div className='flex flex-row gap-1'>
+          {uniqueLines.map(({ color, number }) => (
+            <span key={number} className={`px-2 py-1 bg-gray-400 font-bold shadow-sm rounded-sm ${color === 'FFDD00' ? 'text-neutral-900' : 'text-neutral-50'}`} style={{ backgroundColor: `#${color}` }}>{number}</span>
           ))}
+        </div>
+          <p className='text-right text-[1rem] text-neutral-600'>Última actualización: {lastUpdate.toLocaleString('es-es', { timeStyle: 'medium', dateStyle: 'medium' })}</p>
+      </section>
+      <section className='flex flex-col bg-neutral-100 h-[100vh] max-w-[80ch] m-auto font-medium text-neutral-900'>
+        <div className='flex flex-row p-4 pb-0 gap-2 text-neutral-700'>
+          <p>Línea</p>
+          <p>Destino</p>
+          <p className='ml-auto'>Llegada</p>
+        </div>
+        {data !== undefined
+          ? data?.lines.map((data, index) => (
+            <IncomingBus key={index} {...data}></IncomingBus>
+          ))
+          : <p className='text-center font-bold text-xl'>Ha ocurrido un error y no se han obtenido resultados.</p>
+        }
         </section>
-      </main>
-    </div>
+      </>
   )
 }
 
 const IncomingBus: React.FC<IncomingBusType> = ({ arrival_time, color, destination, number }) => {
   return (
-    <div key={number + destination} className='p-4 text-neutral-700 flex flex-row w-full gap-2 items-center'>
-      <span className='min-w-[3.5ch] h-fit text-center p-[0.1rem] rounded-md font-bold shadow-sm font-mono text-neutral-50' style={{ backgroundColor: `#${color}` }}>{number}</span>
-      <p className='w-fit font-medium text-xl'>{destination}</p>
-      <p className='ml-auto text-xl font-medium text-blue-500'>{arrival_time}</p>
+    <div key={number + destination} className='p-3 border-b-[1px] border-b-neutral-300 flex flex-row w-full gap-2 items-center'>
+      <span className={`min-w-[4ch] h-fit text-center p-[0.1rem] rounded-sm font-bold shadow-sm font-mono ${color === 'FFDD00' ? 'text-neutral-900' : 'text-neutral-50'}`} style={{ backgroundColor: `#${color}` }}>{number}</span>
+      <p className='w-fit font-medium text-xl text-neutral-800'>{destination}</p>
+      <p className='ml-auto text-xl font-medium text-neutral-950'>{arrival_time.replace('min', ' min')}</p>
     </div>
   )
 }
