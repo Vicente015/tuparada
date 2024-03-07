@@ -20,7 +20,7 @@ export default function SearchBar () {
 latitude:0,  
 })
 
-  const matches = useMemo(() => {
+  let matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
     const results = matchSorter(stops, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
     console.log(results);
@@ -44,20 +44,27 @@ latitude:0,
 
   //console.log(coordinates);
 
+  const updateLocation = (position:any) => {
+    const { latitude, longitude } = position.coords;
+    setUserLocation({ latitude, longitude });
+    let lecum = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12);
+    lecum.forEach((element) => {
+      let found = matches.find(({ latitude }) => latitude == getLatitude(element));
+      
+    });
+
+    const newFoundElements = lecum.map((element) => {
+      return matches.find(({ latitude }) => latitude == getLatitude(element));
+    }).filter(found => found); // Filter out any undefined elements
+    console.log(newFoundElements)
+  };
+
   const getUserLocation = () => {
     //console.log('ubu')
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords
-          setUserLocation({ latitude, longitude })
-
-          let lecum = orderByDistance(userLocation,coordinates).slice(0,12);
-          console.log(lecum)
-          lecum.forEach(element => {
-            let found = matches.find(({latitude}) => latitude == getLatitude(element));
-          console.log(found)
-          });
+          updateLocation(position);
         },
         (error) => {
           console.error('Error get user location: ', error)
