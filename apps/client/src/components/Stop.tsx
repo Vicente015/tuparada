@@ -31,7 +31,7 @@ const Stop: React.FC<Props> = ({ stop }) => {
 
   return (
     <div className='max-w-[90ch] m-auto'>
-      <header className='bg-neutral-100 flex flex-row gap-4 items-center p-4'>
+      <header className='bg-neutral-100 font-serif flex flex-row gap-4 items-center p-4'>
         <a href="/">
           <ChevronLeft className='text-neutral-700' size={28} />
         </a>
@@ -66,9 +66,9 @@ const Stop: React.FC<Props> = ({ stop }) => {
 const IncomingBus: React.FC<IncomingBusType> = ({ arrival_time, color, destination, number }) => {
   return (
     <div key={number + destination} className='p-4 text-neutral-700 flex flex-row w-full gap-2 items-center'>
-      <span className='px-2 py-1  rounded-md font-bold shadow-sm font-mono text-neutral-50' style={{ backgroundColor: `#${color}` }}>{number}</span>
+      <span className='min-w-[3.5ch] h-fit text-center p-[0.1rem] rounded-md font-bold shadow-sm font-mono text-neutral-50' style={{ backgroundColor: `#${color}` }}>{number}</span>
       <p className='w-fit font-medium text-xl'>{destination}</p>
-      <p className='ml-auto'>{arrival_time}</p>
+      <p className='ml-auto text-xl font-medium text-blue-500'>{arrival_time}</p>
     </div>
   )
 }

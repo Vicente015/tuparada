@@ -6,7 +6,16 @@ export default {
     extend: {
     },
     fontFamily: {
-      sans: ['Inter', 'system-ui']
+      serif: ['Inter', 'system-ui']
+    },
+    fontSize: {
+      sm: '0.95rem',
+      base: '1.1rem',
+      xl: '1.25rem',
+      '2xl': '1.563rem',
+      '3xl': '1.953rem',
+      '4xl': '2.441rem',
+      '5xl': '3.052rem'
     }
   }
 }
