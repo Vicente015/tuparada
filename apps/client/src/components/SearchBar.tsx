@@ -1,10 +1,10 @@
-
 import * as Ariakit from '@ariakit/react'
 import { getLatitude, orderByDistance } from 'geolib'
+import { MapPin } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
-import { MapPin } from 'lucide-react'
+import { formatStopName } from '../utils/formatStopName'
 
 const coordinates = stops
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)
@@ -12,6 +12,7 @@ const coordinates = stops
     latitude: parseFloat(item.latitude ?? '0'),
     longitude: parseFloat(item.longitude ?? '0')
   }))
+// import { trpc } from '../utils/trpc.js'
 
 export default function SearchBar () {
   interface coordinateTest {
@@ -31,14 +32,13 @@ export default function SearchBar () {
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
     const results = matchSorter(stops, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
-    //console.log(searchLocal)
+    // console.log(searchLocal)
     setSearchLocal(false)
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
 
-
   /* const closeStops =  */useEffect(() => {
-     // CHANGE
+    // CHANGE
 
     const { latitude, longitude } = userLocation
     const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
@@ -50,8 +50,8 @@ export default function SearchBar () {
     // console.log(newFoundElements)
     console.log(nearbyCords)
     console.log(nearbyStops)
-setCloserStops(nearbyStops);
-    //return nearbyStops
+    setCloserStops(nearbyStops)
+    // return nearbyStops
   }, [userLocation])
 
   /*  const updateLocation = (position:any) => {
@@ -111,7 +111,7 @@ setCloserStops(nearbyStops);
                 <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
                   <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
-                    <p className='w-auto h-auto break-words text-base'>{name.split(' ').map(word => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)).join(' ')}</p>
+                    <p className='w-auto h-auto break-words text-base'>{formatStopName(name)}</p>
                   </a>
                 </Ariakit.ComboboxItem>
               ))
@@ -129,13 +129,13 @@ setCloserStops(nearbyStops);
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
                     <p className='w-auto h-auto break-words text-base'>{name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)).join(' ')}</p>
                   </a>
-                  
+
                 </Ariakit.ComboboxItem>
               ))
             )
           : (
             <div className="no-results"></div>
-          )
+            )
         }
         {(!searchLocal) // y no hay resultados cercanos (matches.length > 0)
           ? (

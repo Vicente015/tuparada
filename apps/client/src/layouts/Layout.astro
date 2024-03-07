@@ -1,9 +1,10 @@
 ---
 interface Props {
   title: string
+  className: string
 }
 
-const { title } = Astro.props
+const { className, title } = Astro.props
 ---
 
 <!doctype html>
@@ -16,7 +17,7 @@ const { title } = Astro.props
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-neutral-100">
+  <body class={className}>
     <slot />
   </body>
 </html>

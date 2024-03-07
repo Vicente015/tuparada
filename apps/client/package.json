@@ -26,7 +26,8 @@
     "react-dom": "^18.2.0",
     "server": "workspace:*",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "use-local-storage-state": "^19.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",

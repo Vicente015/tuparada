@@ -6,7 +6,8 @@ export default {
     extend: {
     },
     fontFamily: {
-      serif: ['Inter', 'system-ui']
+      serif: ['Inter', 'system-ui'],
+      mono: ['JetBrains Mono']
     },
     fontSize: {
       sm: '0.95rem',
