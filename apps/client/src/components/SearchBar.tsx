@@ -26,6 +26,7 @@ export default function SearchBar () {
     longitude: 0,
     latitude: 0
   })
+  const [closerStops, setCloserStops] = useState<any>()
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
@@ -36,7 +37,7 @@ export default function SearchBar () {
   }, [searchValue])
 
 
-  const closeStops = useMemo(() => {
+  /* const closeStops =  */useEffect(() => {
      // CHANGE
 
     const { latitude, longitude } = userLocation
@@ -49,9 +50,9 @@ export default function SearchBar () {
     // console.log(newFoundElements)
     console.log(nearbyCords)
     console.log(nearbyStops)
-
-    return nearbyStops
-  }, [userLocation]) as any
+setCloserStops(nearbyStops);
+    //return nearbyStops
+  }, [userLocation])
 
   /*  const updateLocation = (position:any) => {
     setSearchValue('');
@@ -122,7 +123,7 @@ export default function SearchBar () {
 
         {(searchLocal) // y no hay resultados cercanos (matches.length > 0)
           ? (
-              closeStops.map(({ id, name }) => (
+              closerStops.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
                   <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
