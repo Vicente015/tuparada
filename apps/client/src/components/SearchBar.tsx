@@ -22,11 +22,11 @@ export default function SearchBar () {
   let matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
     const results = matchSorter(stops, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
-    console.log(results)
+    //console.log(results)
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
 
-  const coordinates = stops.map(item => {
+  /* const coordinates = stops.map(item => {
     if (item.latitude) {
       return {
         latitude: item.latitude,
@@ -38,23 +38,31 @@ export default function SearchBar () {
         longitude: '0'
       }
     }
-  })
+  }) */
+
+  const coordinates = stops
+  .filter(item => item.latitude)
+  .map(item => ({
+    latitude: item.latitude!,
+    longitude: item.longitude || '0'
+  }));
 
   // console.log(coordinates);
 
   const updateLocation = (position:any) => {
     const { latitude, longitude } = position.coords;
     setUserLocation({ latitude, longitude });
+    console.log(coordinates)
     let lecum = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12);
-    lecum.forEach((element) => {
+    /* lecum.forEach((element) => {
       let found = matches.find(({ latitude }) => latitude == getLatitude(element));
       
-    });
+    }); */
 
     const newFoundElements = lecum.map((element) => {
       return matches.find(({ latitude }) => latitude == getLatitude(element));
     }).filter(found => found); // Filter out any undefined elements
-    console.log(newFoundElements)
+    //console.log(newFoundElements)
   };
 
   const getUserLocation = () => {
