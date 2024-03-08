@@ -4,6 +4,7 @@ import { MapPin } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
+import {getMapData} from '../hooks/getMapData'
 import { formatStopName } from '../utils/formatStopName'
 
 const coordinates = stops
@@ -28,11 +29,11 @@ export default function SearchBar () {
     latitude: 0
   })
   const [closerStops, setCloserStops] = useState<any>()
+  const {mapData, addStops, addStopsCoords, addUserCoords }= getMapData()
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
     const results = matchSorter(stops, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
-    // console.log(searchLocal)
     setSearchLocal(false)
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
@@ -48,25 +49,15 @@ export default function SearchBar () {
         return matches.find(({ latitude }) => latitude == getLatitude(element))
       }).filter(found => found?.latitude && found?.longitude) // Filter out any undefined elements
     // console.log(newFoundElements)
-    console.log(nearbyCords)
-    console.log(nearbyStops)
+    //console.log(nearbyCords)
+    //console.log(nearbyStops)
+    addStops(nearbyStops as any)
+    addStopsCoords(nearbyCords)
+    addUserCoords(userLocation)
     setCloserStops(nearbyStops)
-    // return nearbyStops
   }, [userLocation])
 
-  /*  const updateLocation = (position:any) => {
-    setSearchValue('');
-    const { latitude, longitude } = position.coords;
-    setUserLocation({ latitude, longitude });
-    console.log(coordinates)
-    let lecum = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12);
 
-    const newFoundElements = lecum.map((element) => {
-      return matches.find(({ latitude }) => latitude == getLatitude(element));
-    }).filter(found => found); // Filter out any undefined elements
-    //console.log(newFoundElements)
-    setCloserStops(newFoundElements);
-  }; */
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -84,7 +75,6 @@ export default function SearchBar () {
     } else {
       console.log('Geolocation is not supported by this browser')
     }
-    // console.log(userLocation?.latitude + ' - ' + userLocation?.longitude)
   }
 
   return (
@@ -105,25 +95,9 @@ export default function SearchBar () {
             </a>
         </Ariakit.ComboboxItem>
 
-        {/* {(matches.length <= 0 && closeStops.length > 0) //hay resultados cercanos
-          ? (
-              closeStops.map(({ id, name }) => (
-                <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
-                  <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
-                    <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
-                    <p className='w-auto h-auto break-words text-base'>{formatStopName(name)}</p>
-                  </a>
-                </Ariakit.ComboboxItem>
-              ))
-            )
-          : (
-              <div className="no-results">No hay resultados</div>
-            )
-        } */}
-
         {(searchLocal) // y no hay resultados cercanos (matches.length > 0)
           ? (
-              closerStops.map(({ id, name }) => (
+              closerStops.map(({ id, name }:any) => (
                 <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
                   <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
