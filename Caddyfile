@@ -1,0 +1,12 @@
+* {
+  tls /etc/ssl/certs/tuparada.pem /etc/ssl/private/tuparada.pem
+}
+
+tuparada.vicente015.dev {
+  root * apps/client/dist/
+  file_server
+}
+
+apituparada.vicente015.dev {
+  reverse_proxy localhost:3000
+}
