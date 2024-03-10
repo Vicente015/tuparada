@@ -4,7 +4,7 @@ import { MapPin } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
-import {getMapData} from '../hooks/getMapData'
+import { getMapData } from '../hooks/getMapData'
 import { formatStopName } from '../utils/formatStopName'
 
 const coordinates = stops
@@ -29,7 +29,7 @@ export default function SearchBar () {
     latitude: 0
   })
   const [closerStops, setCloserStops] = useState<any>()
-  const {mapData, addStops, addStopsCoords, addUserCoords }= getMapData()
+  const { addStops, addStopsCoords, addUserCoords, mapData } = getMapData()
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
@@ -49,15 +49,13 @@ export default function SearchBar () {
         return matches.find(({ latitude }) => latitude == getLatitude(element))
       }).filter(found => found?.latitude && found?.longitude) // Filter out any undefined elements
     // console.log(newFoundElements)
-    //console.log(nearbyCords)
-    //console.log(nearbyStops)
+    // console.log(nearbyCords)
+    // console.log(nearbyStops)
     addStops(nearbyStops as any)
     addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
     setCloserStops(nearbyStops)
   }, [userLocation])
-
-
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -97,7 +95,7 @@ export default function SearchBar () {
 
         {(searchLocal) // y no hay resultados cercanos (matches.length > 0)
           ? (
-              closerStops.map(({ id, name }:any) => (
+              closerStops.map(({ id, name }: any) => (
                 <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
                   <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>

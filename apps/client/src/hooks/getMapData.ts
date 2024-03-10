@@ -5,7 +5,7 @@ export function getMapData () {
   const [mapData, setMapData] = useState<GeolibInputCoordinates[]>()
   const [stopCoords, setStopCoors] = useState<GeolibInputCoordinates[]>()
   const [userCoords, setUserCoors] = useState<GeolibInputCoordinates>()
- 
+
   const addStops = (coords: GeolibInputCoordinates[]) => {
     console.log(coords)
     setMapData(coords)
@@ -18,7 +18,7 @@ export function getMapData () {
     console.log(coords)
     setUserCoors(coords)
   }
-/*
+  /*
   const unStarStop = (stop: number) => {
     const index = starredStops.indexOf(stop)
     setStarredStops(starredStops.toSpliced(index, 1))
@@ -30,6 +30,6 @@ export function getMapData () {
     addStops,
     addStopsCoords,
     addUserCoords
-    
-  } 
+
+  }
 }
