@@ -34,7 +34,7 @@ const server = fastify({
 })
 
 await server.register(cors, {
-  origin: 'http://localhost:4321'
+  origin: env.NODE_ENV === 'production' ? 'https://tuparada.vicente015.dev' : 'http://localhost:4321'
 })
 await server.register(fastifyCaching,
   {
