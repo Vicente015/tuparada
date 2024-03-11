@@ -80,7 +80,7 @@ export default function SearchBar () {
         <Ariakit.ComboboxItem>
           <button type='button' onClick={getUserLocation} className='p-2 w-full flex flex-row gap-2 border-b-[1px] border-b-neutral-200 cursor-pointer'>
             <MapPinIcon className='min-w-[3.5ch]' size={26}/>
-            <p className='text-base w-auto'>Buscar paradas cercanas</p>
+            <p className='text-base w-auto text-neutral-950 font-semibold'>Buscar paradas cercanas</p>
           </button>
         </Ariakit.ComboboxItem>
 
