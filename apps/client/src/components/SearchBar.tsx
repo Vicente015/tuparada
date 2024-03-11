@@ -1,6 +1,6 @@
 import * as Ariakit from '@ariakit/react'
 import { orderByDistance } from 'geolib'
-import { MapPinIcon } from 'lucide-react'
+import { MapPinIcon, SearchIcon } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
@@ -72,11 +72,15 @@ export default function SearchBar () {
         startTransition(() => { setSearchValue(value) })
       }}
     >
-      <div className="w-[22rem] bg-neutral-100 flex flex-row items-center shadow-sm rounded-md focus-within:outline-2 focus-within:outline-blue-400 focus-within:outline">
-        <Ariakit.Combobox autoFocus placeholder="Nombre de la parada" className="bg-transparent w-full py-2 px-2 pr-8 text-base placeholder-neutral-700 text-neutral-900 outline-none" aria-label='Buscador de paradas'/>
-        <Ariakit.ComboboxCancel className='text-neutral-900 -ml-7 mx-1 w-fit text-xl'></Ariakit.ComboboxCancel>
+      <div className="w-[22rem] bg-neutral-100 flex flex-row items-center justify-between gap-2 p-3 px-2 shadow-sm rounded-md focus-within:outline-2 focus-within:outline-blue-400 focus-within:outline">
+        <SearchIcon className='text-neutral-950'></SearchIcon>
+        <Ariakit.Combobox autoFocus placeholder="Nombre de la parada" className="bg-transparent w-full text-base placeholder-neutral-700 text-neutral-900 outline-none" aria-label='Buscador de paradas' />
+        <Ariakit.ComboboxCancel className='text-neutral-900 w-fit text-xl'></Ariakit.ComboboxCancel>
       </div>
-      <Ariakit.ComboboxPopover gutter={4} sameWidth className="max-h-96 relative overflow-y-scroll overflow-x-hidden flex flex-col p-1 bg-neutral-100 text-neutral-900 shadow-xl rounded-md">
+      <Ariakit.ComboboxPopover
+        gutter={18}
+        className="max-h-96 -ml-9 w-[22rem] relative overflow-y-scroll overflow-x-hidden flex flex-col p-1 bg-neutral-100 text-neutral-900 shadow-2xl rounded-md"
+      >
         <Ariakit.ComboboxItem>
           <button type='button' onClick={getUserLocation} className='p-2 w-full flex flex-row gap-2 border-b-[1px] border-b-neutral-200 cursor-pointer'>
             <MapPinIcon className='min-w-[3.5ch]' size={26}/>
