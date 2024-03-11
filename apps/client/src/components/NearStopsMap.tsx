@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css'
 import { getLatitude, getLongitude } from 'geolib'
 import type { GeolibInputCoordinates } from 'geolib/es/types'
 import { useEffect, useRef, useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
 import { Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 
@@ -12,21 +12,18 @@ import { Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 
 const Map: React.FC = () =>  {
   const { mapData, userCoords, openMap, setMapState } = getMapData(); 
+  const [Zoom, setZoomHook] = useState(9);
+
 
   const PointMarker = ({ center, name, id, icon }: any) => {
-    const map = useMap()
     const markerRef = useRef(null)
-
-var testBounds = [[28.300640, -15.716717],[27.889199, -15.144883]]
-
-var corner1 = latLng(28.300640, -15.716717),
-corner2 = latLng(27.889199, -15.144883),
-bounds = latLngBounds(corner1, corner2);
-//rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map)
-map.setMaxBounds(bounds)
-map.setMinZoom(10)
-
-
+  const map = useMap()
+    var corner1 = latLng(28.300640, -15.716717), //todo: change to use userCoords as reference
+    corner2 = latLng(27.889199, -15.144883),
+    bounds = latLngBounds(corner1, corner2);
+    //rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map)
+    map.setMaxBounds(bounds)
+    map.setMinZoom(10)
     map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
 
     return (
@@ -44,6 +41,17 @@ map.setMinZoom(10)
       </Marker>
     )
   }
+
+  const MapEvents = () => {
+  const map = useMap()
+    useMapEvents({
+      zoomend() { // zoom event (when zoom animation ended)
+        const zoom = map.getZoom(); // get current Zoom of map
+        setZoomHook(zoom);
+      },
+    });
+    return false;
+  };
 
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (
@@ -93,7 +101,9 @@ map.setMinZoom(10)
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MyMarkers data={mapData} />
+      <MapEvents /> 
+      
+      {Zoom >=15 ? <MyMarkers data={mapData} /> : null}
       <UserMarker coords={userCoords}/>
     </MapContainer>
  

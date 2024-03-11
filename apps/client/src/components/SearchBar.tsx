@@ -42,7 +42,7 @@ export default function SearchBar () {
   }, [])
   useEffect(() => {
     const { latitude, longitude } = userLocation
-    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 20)
+    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 900)
 
     const nearbyStops = nearbyCords.filter(Boolean)
     addStops(nearbyStops)
