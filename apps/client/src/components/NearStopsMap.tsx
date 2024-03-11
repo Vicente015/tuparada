@@ -1,5 +1,6 @@
 import 'leaflet/dist/leaflet.css'
 import { getLatitude, getLongitude } from 'geolib'
+import type { GeolibInputCoordinates } from 'geolib/es/types'
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
@@ -33,7 +34,6 @@ const Map: React.FC = () =>  {
       </Marker>
     )
   }
-
 
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (

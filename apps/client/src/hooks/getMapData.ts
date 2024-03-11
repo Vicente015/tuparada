@@ -6,7 +6,7 @@ export function getMapData () {
   const [mapData, setMapData] = useLocalStorageState<GeolibInputCoordinates[]>('mapData')
   const [stopCoords, setStopCoors] = useState<GeolibInputCoordinates[]>()
   const [userCoords, setUserCoors] = useLocalStorageState<GeolibInputCoordinates>('userCoords')
-  const [openMap, setOpenMap] = useLocalStorageState<Boolean>('openMap', { defaultValue: false })
+  const [openMap, setOpenMap] = useLocalStorageState<boolean>('openMap', { defaultValue: false })
 
   const addStops = (coords: GeolibInputCoordinates[]) => {
     setMapData(coords)

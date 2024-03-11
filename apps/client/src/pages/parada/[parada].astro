@@ -1,12 +1,12 @@
 ---
 import { ChevronLeft } from 'lucide-react'
-import StarStop from '../../components/StarStop.jsx'
+import StarButton from '../../components/StarButton.jsx'
 import StopWrapper from '../../components/StopWrapper.jsx'
 import Layout from '../../layouts/Layout.astro'
 
 export function getStaticPaths () {
-  return Array.from(Array(1000).keys()).map(number => ({
-    params: { parada: number.toString() }
+  return Array.from(Array(999).keys()).map(number => ({
+    params: { parada: (number + 1).toString() }
   }))
 }
 
@@ -15,12 +15,12 @@ const stop = parseInt(parada)
 ---
 
 <Layout title={`Parada ${parada}`} className='bg-neutral-100'>
-  <header class='bg-neutral-50 font-serif flex flex-row gap-4 items-center p-4 '>
+  <header class='bg-neutral-50 font-serif flex flex-row gap-4 items-center p-4 max-w-[90ch] m-auto'>
     <a href="/">
       <ChevronLeft className='text-neutral-700' size={28} />
     </a>
     <h2 class='text-2xl font-bold text-neutral-800 m-auto'>Próximas Guaguas</h2>
-    <StarStop client:load stop={parseInt(parada)}></StarStop>
+    <StarButton client:idle stop={parseInt(parada)}></StarButton>
   </header>
   <main class=''>
     <StopWrapper client:only={'react'} stop={stop}/>
