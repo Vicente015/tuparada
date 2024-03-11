@@ -62,7 +62,7 @@ const Map: React.FC = () =>  {
   })
   const busStopIcon = new Icon({
     iconUrl:'../../public/bus-stop.svg',
-    iconSize:     [45, 45],
+    iconSize:     [19, 20],
   })
 
   //todo: Mejorar el cierre del mapa

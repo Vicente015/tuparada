@@ -41,9 +41,10 @@ export default function SearchBar () {
   useEffect(() => { //todo : encontrar mejor manera de implementar
     setMapState(false)
   },[])
-useEffect(() => {
+
+  useEffect(() => {
     const { latitude, longitude } = userLocation
-    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
+    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 20)
 
     const nearbyStops = nearbyCords
       .map((element) => {
