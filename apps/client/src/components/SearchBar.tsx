@@ -1,34 +1,33 @@
 import * as Ariakit from '@ariakit/react'
-import { getLatitude, orderByDistance } from 'geolib'
-import { MapPin } from 'lucide-react'
+import { orderByDistance } from 'geolib'
+import { MapPinIcon } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
 import { getMapData } from '../hooks/getMapData'
 import { formatStopName } from '../utils/formatStopName'
+import normalizeAbbreviations from '../utils/normalizeAbbreviations'
 
 const coordinates = stops
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)
   .map(item => ({
+    ...item,
     latitude: parseFloat(item.latitude ?? '0'),
     longitude: parseFloat(item.longitude ?? '0')
   }))
-// import { trpc } from '../utils/trpc.js'
 
 export default function SearchBar () {
-  interface coordinateTest {
-    latitude: number
-    longitude: number
-  }
+  const stopsWithoutAbbv = useMemo(() => {
+    return stops.map((stop) => ({ ...stop, name: normalizeAbbreviations(stop.name) }))
+  }, [])
 
-  // const { data: stops } = trpc.paradas.list.useQuery()
   const [searchValue, setSearchValue] = useState('')
   const [searchLocal, setSearchLocal] = useState(false)
-  const [userLocation, setUserLocation] = useState<coordinateTest>({
+  const [userLocation, setUserLocation] = useState({
     longitude: 0,
     latitude: 0
   })
-  const [closerStops, setCloserStops] = useState<any>()
+  const [closerStops, setCloserStops] = useState<typeof coordinates>()
   const { addStops, addStopsCoords, addUserCoords, mapData, setMapState } = getMapData()
 
   const matches = useMemo(() => {
@@ -45,36 +44,26 @@ export default function SearchBar () {
     const { latitude, longitude } = userLocation
     const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
 
-    const nearbyStops = nearbyCords
-      .map((element) => {
-        return matches.find(({ latitude }) => latitude == getLatitude(element))
-      }).filter(found => found?.latitude && found?.longitude) // Filter out any undefined elements
-    // console.log(newFoundElements)
-    // console.log(nearbyCords)
-    console.log('el userLocatio hook se ha ejecutado')
-    addStops(nearbyStops as any)
+    const nearbyStops = nearbyCords.filter(Boolean)
+    addStops(nearbyStops)
     addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
     setCloserStops(nearbyStops)
   }, [userLocation])
 
   const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          setSearchLocal(true)
-          setMapState(true)
-          setSearchValue('')
-          setUserLocation({ latitude, longitude })
-        },
-        (error) => {
-          console.error('Error get user location: ', error)
-        }
-      )
-    } else {
-      console.log('Geolocation is not supported by this browser')
-    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        setSearchLocal(true)
+        setMapState(true)
+        setSearchValue('')
+        setUserLocation({ latitude, longitude })
+      },
+      (error) => {
+        console.error('Error get user location: ', error)
+      }
+    )
   }
 
   return (
@@ -83,48 +72,43 @@ export default function SearchBar () {
         startTransition(() => { setSearchValue(value) })
       }}
     >
-      <Ariakit.ComboboxLabel>
-        Buscador de paradas
-      </Ariakit.ComboboxLabel>
-      <Ariakit.Combobox placeholder="Mesa y López" className="text-base w-80 p-2 bg-neutral-100 placeholder-neutral-800 text-neutral-900 shadow-sm rounded-md" />
-      <Ariakit.ComboboxPopover gutter={3} sameWidth className="max-h-96 overflow-y-scroll overflow-x-hidden flex flex-col gap-2 p-1 bg-neutral-100 text-neutral-900 shadow-xl rounded-md">
-        <Ariakit.ComboboxItem onClick={getUserLocation}>
-            <a className='w-auto h-auto break-words p-1 flex flex-row gap-2'>
-            <MapPin />
-              <p>Buscar paradas cercanas</p>
-            </a>
+      <div className="w-[22rem] bg-neutral-100 flex flex-row items-center shadow-sm rounded-md focus-within:outline-2 focus-within:outline-blue-400 focus-within:outline">
+        <Ariakit.Combobox autoFocus placeholder="Nombre de la parada" className="bg-transparent w-full py-2 px-2 pr-8 text-base placeholder-neutral-700 text-neutral-900 outline-none" aria-label='Buscador de paradas'/>
+        <Ariakit.ComboboxCancel className='text-neutral-900 -ml-7 mx-1 w-fit text-xl'></Ariakit.ComboboxCancel>
+      </div>
+      <Ariakit.ComboboxPopover gutter={4} sameWidth className="max-h-96 relative overflow-y-scroll overflow-x-hidden flex flex-col p-1 bg-neutral-100 text-neutral-900 shadow-xl rounded-md">
+        <Ariakit.ComboboxItem>
+          <button type='button' onClick={getUserLocation} className='p-2 w-full flex flex-row gap-2 border-b-[1px] border-b-neutral-200 cursor-pointer'>
+            <MapPinIcon className='min-w-[3.5ch]' size={26}/>
+            <p className='text-base w-auto'>Buscar paradas cercanas</p>
+          </button>
         </Ariakit.ComboboxItem>
 
         {(searchLocal) // y no hay resultados cercanos (matches.length > 0)
           ? (
-              closerStops.map(({ id, name }: any) => (
-                <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
-                  <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
+              closerStops.map(({ id, name }) => (
+                <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
+                  <a className='flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
-                    <p className='w-auto h-auto break-words text-base'>{name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)).join(' ')}</p>
-                  </a>
-
-                </Ariakit.ComboboxItem>
-              ))
-            )
-          : (
-            <div className="no-results"></div>
-            )
-        }
-        {(!searchLocal) // y no hay resultados cercanos (matches.length > 0)
-          ? (
-              matches.map(({ id, name }) => (
-                <Ariakit.ComboboxItem key={id} className="text-neutral-900 border-b-[1px] border-b-neutral-200">
-                  <a className='p-1 flex flex-row gap-2' href={`/parada/${id}`}>
-                    <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
-                    <p className='w-auto h-auto break-words text-base'>{name.split(' ').map(word => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)).join(' ')}</p>
+                    <p className='w-auto h-auto break-words text-base'>{formatStopName(name)}</p>
                   </a>
                 </Ariakit.ComboboxItem>
               ))
             )
-          : (
-              <div className="no-results"></div>
-            )
+          : (!searchLocal && matches.length > 0) // y no hay resultados cercanos (matches.length > 0)
+              ? (
+                  matches.map(({ id, name }) => (
+                <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
+                  <a className='flex flex-row gap-2' href={`/parada/${id}`}>
+                    <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
+                    <p className='w-auto h-auto break-words text-base'>{formatStopName(name)}</p>
+                  </a>
+                </Ariakit.ComboboxItem>
+                  ))
+                )
+              : (
+                  <div className="no-results"></div>
+                )
         }
       </Ariakit.ComboboxPopover>
     </Ariakit.ComboboxProvider>

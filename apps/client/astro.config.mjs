@@ -5,6 +5,7 @@ import { defineConfig } from 'astro/config'
 // https://astro.build/config
 export default defineConfig({
   compressHTML: true,
+  output: 'static',
   integrations: [
     react(),
     tailwind({

@@ -1,15 +1,14 @@
 ---
-import { StarIcon } from 'lucide-react'
+import { HistoryIcon, StarIcon } from 'lucide-react'
 import Map from '../components/NearStopsMap.jsx'
+import RecentStops from '../components/RecentStops.jsx'
 import SearchBar from '../components/SearchBar.jsx'
-import StarStopsList from '../components/StarStopsList.jsx'
+import StarredStops from '../components/StarredStops.jsx'
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Tu Parada" className="bg-blue-100">
-  <header
-    class="flex flex-col gap-4 font-serif w-full py-12 bg-blue-600 text-white"
-  >
+<Layout title="Tu Parada" className="bg-neutral-100">
+  <header class="flex flex-col gap-4 font-serif w-full py-12 bg-blue-600 text-white">
     <h1 class="font-bold text-2xl text-center">Tu Parada</h1>
     <p class="text-lg text-balance text-center">
       Guarda un acceso directo a tu parada y consúltalo de forma rápida y
@@ -25,16 +24,20 @@ import Layout from '../layouts/Layout.astro';
   <div>
     <Map client:only />
   </div>
-  <main class="h-screen py-4 max-w-[80ch] m-auto px-4 flex flex-col gap-4">
+  <main class="h-screen py-6 max-w-[80ch] m-auto px-4 flex flex-col gap-4">
     <section>
-      <h2 class="text-2xl font-bold">Paradas buscadas recientemente</h2>
+      <h2 class="text-2xl font-bold flex flex-row gap-2 items-center mb-2">
+        <HistoryIcon className='text-blue-800' size={32} />
+        Búsquedas recientes
+      </h2>
+      <RecentStops client:idle></RecentStops>
     </section>
     <section>
       <h2 class="text-2xl font-bold flex flex-row gap-2 items-center mb-2">
-        <StarIcon className="inline text-blue-800" size={32} />
+        <StarIcon className='text-blue-800' size={32}></StarIcon>
         Paradas favoritas
       </h2>
-      <StarStopsList client:load />
+      <StarredStops client:load></StarredStops>
     </section>
   </main>
 </Layout>

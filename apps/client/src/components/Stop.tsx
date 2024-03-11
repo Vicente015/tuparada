@@ -1,6 +1,7 @@
 import type { inferRouterOutputs } from '@trpc/server'
 import { useEffect, useMemo, useState } from 'react'
 import type { AppRouter } from 'server/src/routers/_app'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { trpc } from '../utils/trpc'
 type IncomingBusType = inferRouterOutputs<AppRouter>['paradas']['get']['lines'][number]
 
@@ -16,6 +17,7 @@ const Stop: React.FC<Props> = ({ stop }) => {
     }
   )
   const [lastUpdate, setLastUpdate] = useState(new Date())
+  const { addRecentStop } = useLocalStorage()
 
   const uniqueLines = useMemo(() => {
     return Array.from(
@@ -29,9 +31,13 @@ const Stop: React.FC<Props> = ({ stop }) => {
     setLastUpdate(new Date())
   }, [data])
 
+  useEffect(() => {
+    addRecentStop(stop)
+  }, [])
+
   return (
     <>
-      <section className='bg-neutral-200 p-4 max-w-[80ch] m-auto'>
+      <section className='bg-neutral-200 p-4 max-w-[90ch] m-auto'>
         <div className='flex flex-row gap-2 mb-1 items-center'>
           <h4 className='text-neutral-800 text-lg font-mono'>{stop}</h4>
           <h2 className='text-neutral-900 text-xl font-bold'>{data?.name}</h2>
@@ -43,7 +49,7 @@ const Stop: React.FC<Props> = ({ stop }) => {
         </div>
           <p className='text-right text-[1rem] text-neutral-600'>Última actualización: {lastUpdate.toLocaleString('es-es', { timeStyle: 'medium', dateStyle: 'medium' })}</p>
       </section>
-      <section className='flex flex-col bg-neutral-100 h-[100vh] max-w-[80ch] m-auto font-medium text-neutral-900'>
+      <section className='flex flex-col bg-neutral-50 h-full max-w-[90ch] m-auto font-medium text-neutral-900'>
         <div className='flex flex-row p-4 pb-0 gap-2 text-neutral-700'>
           <p>Línea</p>
           <p>Destino</p>

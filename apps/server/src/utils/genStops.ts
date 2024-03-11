@@ -70,7 +70,7 @@ async function genStopsJSON () {
     const stopFoundInTransit = transitStops.find(({ id }) => id === parseInt(numero))
     return {
       id: numero,
-      name: nombre,
+      name: nombre.replace('       (ES LA MISMA QUE LA P898)', '').trim(),
       latitude: stopFoundInTransit?.latitude,
       longitude: stopFoundInTransit?.longitude
     }
