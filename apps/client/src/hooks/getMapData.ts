@@ -9,28 +9,19 @@ export function getMapData () {
   const [openMap, setOpenMap] = useLocalStorageState<Boolean>('openMap', { defaultValue: false })
 
   const addStops = (coords: GeolibInputCoordinates[]) => {
-    console.log(coords)
     setMapData(coords)
   }
   const addStopsCoords = (coords: GeolibInputCoordinates[]) => {
-    console.log(coords)
     setStopCoors(coords)
   }
   const addUserCoords = (coords: GeolibInputCoordinates) => {
-    console.log(coords)
     setUserCoors(coords)
   }
 
   const setMapState = (open: Boolean) => {
-    console.log(open)
     setOpenMap(open)
   }
-  /*
-  const unStarStop = (stop: number) => {
-    const index = starredStops.indexOf(stop)
-    setStarredStops(starredStops.toSpliced(index, 1))
-  }
-*/
+
   return {
     mapData,
     userCoords,

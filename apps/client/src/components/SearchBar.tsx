@@ -49,9 +49,7 @@ useEffect(() => {
       .map((element) => {
         return matches.find(({ latitude }) => latitude == getLatitude(element))
       }).filter(found => found?.latitude && found?.longitude) // Filter out any undefined elements
-    // console.log(newFoundElements)
-    // console.log(nearbyCords)
-     console.log("el userLocatio hook se ha ejecutado")
+    
     addStops(nearbyStops as any)
     addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
