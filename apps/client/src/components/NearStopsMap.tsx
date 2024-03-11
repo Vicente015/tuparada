@@ -1,24 +1,18 @@
 import 'leaflet/dist/leaflet.css'
 import { getLatitude, getLongitude } from 'geolib'
+import type { GeolibInputCoordinates } from 'geolib/es/types'
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
-import type { GeolibInputCoordinates } from 'geolib/es/types'
 
-
-
-
-const Map: React.FC = () =>  {
-  const [ numTest, setNumTest] = useState(0)
+const Map: React.FC = () => {
+  const [numTest, setNumTest] = useState(0)
   const [test, setTest] = useState('')
 
-  
-  const { mapData, userCoords, openMap, setMapState } = getMapData(); 
-  
+  const { mapData, openMap, setMapState, userCoords } = getMapData()
+
   /* const [mapData, setMapData] = useState(undefined);
   const [userCoords, setUserCoords] = useState(undefined); */
-
-
 
   const locations = [
     {
@@ -95,11 +89,10 @@ const Map: React.FC = () =>  {
     }
   ]
 
-  const PointMarker = ({ center, name, id }: any) => {
+  const PointMarker = ({ center, id, name }: any) => {
     const map = useMap()
     const markerRef = useRef(null)
-    map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
-
+    map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom())
 
     return (
       <Marker ref={markerRef} position={center}>
@@ -115,53 +108,50 @@ const Map: React.FC = () =>  {
     )
   }
 
-
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (
       <PointMarker
-        //key={index}
+        // key={index}
         name={item.name}
         id={item.id}
         center={{ lat: item.latitude, lng: item.longitude }}
       />
     ))
   }
-/*   const testu = async () => {
+  /*   const testu = async () => {
     console.log("Juan");
     setNumTest(numTest + 1);
     console.log("el mapodato abajo")
     console.log(mapData)
     console.log("el mapodato arriba")
-    
 
   };
    */
-
 
   useEffect(() => {
     console.log('Lecum twice')
     setTest('juan')
     console.log(mapData)
     console.log(userCoords)
-    console.log(typeof(mapData))
+    console.log(typeof (mapData))
     // add navigate to user location
   }, [mapData, numTest])
 
   if (!openMap) {
     return (
-/*       <button className='testButton' onClick={testu}>Mapabutton sin na</button>
- */ null    
-)
+    /*       <button className='testButton' onClick={testu}>Mapabutton sin na</button>
+ */ null
+    )
   }
 
   const closeMap = () => {
-setMapState(false)
+    setMapState(false)
   }
 
-//todo: Mejorar el cierre del mapa
+  // todo: Mejorar el cierre del mapa
   return (
     <>
-    <MapContainer style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  zoom={13} scrollWheelZoom={false}>
+    <MapContainer style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]} zoom={13} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

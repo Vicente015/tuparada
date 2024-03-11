@@ -38,10 +38,10 @@ export default function SearchBar () {
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
 
-  useEffect(() => { //todo : encontrar mejor manera de implementar
+  useEffect(() => { // todo : encontrar mejor manera de implementar
     setMapState(false)
-  },[])
-useEffect(() => {
+  }, [])
+  useEffect(() => {
     const { latitude, longitude } = userLocation
     const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
 
@@ -51,14 +51,12 @@ useEffect(() => {
       }).filter(found => found?.latitude && found?.longitude) // Filter out any undefined elements
     // console.log(newFoundElements)
     // console.log(nearbyCords)
-     console.log("el userLocatio hook se ha ejecutado")
+    console.log('el userLocatio hook se ha ejecutado')
     addStops(nearbyStops as any)
     addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
     setCloserStops(nearbyStops)
   }, [userLocation])
-
-
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
