@@ -32,8 +32,9 @@ export default function SearchBar () {
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
-    const results = matchSorter(stops, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
+    const results = matchSorter(stopsWithoutAbbv, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
     setSearchLocal(false)
+    results.length = 100
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
 

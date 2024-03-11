@@ -19,7 +19,7 @@ const abbreviations = {
 function removeAbbvInName (name: string) {
   let result
   for (const [abbv, value] of Object.entries(abbreviations)) {
-    result = name.replace(abbv.toUpperCase(), value.toUpperCase())
+    result = name.replaceAll(new RegExp(abbv.toUpperCase(), 'g'), value.toUpperCase())
   }
   return result
 }

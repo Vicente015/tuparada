@@ -25,4 +25,4 @@ Después debes de entrar tanto a `apps/server` como a `apps/client` y ejecutar `
 ### Nice to have
 - [x] Implementar búsqueda de paradas cercanas con lat y log de paradas, mirar https://github.com/manuelbieh/geolib?tab=readme-ov-file#findnearestpoint-arrayofpoints
 - [ ] Implementar resolvedor de acrónimos para la búsqueda? (ctra => carretera)
-- [ ] Implementar funcionalidad de búsqueda de paradas recientes (sección aparte o en el dropdown de búsqueda?)
+- [x] Implementar funcionalidad de búsqueda de paradas recientes (sección aparte o en el dropdown de búsqueda?)

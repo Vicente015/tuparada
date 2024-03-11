@@ -48,7 +48,7 @@ const Stop: React.FC<Props> = ({ stop }) => {
           {
             isSuccess
               ? uniqueLines.map(({ color, number }) => (
-                <span key={number} className={`px-2 py-1 bg-gray-400 font-bold shadow-sm rounded-sm ${color === 'FFDD00' ? 'text-neutral-900' : 'text-neutral-50'}`} style={{ backgroundColor: `#${color}` }}>{number}</span>
+                <span key={number} className={`py-1 min-w-[3ch] text-center bg-gray-400 font-bold shadow-sm rounded-sm ${color === 'FFDD00' ? 'text-neutral-900' : 'text-neutral-50'}`} style={{ backgroundColor: `#${color}` }}>{number}</span>
               ))
               : Array(3).fill(0).map((_, index) => (
                 <Skeleton key={index} height={'2em'} width={'2em'}/>
