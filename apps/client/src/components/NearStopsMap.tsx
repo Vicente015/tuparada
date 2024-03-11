@@ -3,21 +3,22 @@ import { getLatitude, getLongitude } from 'geolib'
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
+import type { GeolibInputCoordinates } from 'geolib/es/types'
 
-const Map: React.FC = () => {
-  const { mapData, userCoords } = getMapData()
-  const userCoordsTest = userCoords
+
+
+
+const Map: React.FC = () =>  {
+  const [ numTest, setNumTest] = useState(0)
   const [test, setTest] = useState('')
 
-  const MyMarkers = ({ data }: any) => {
-    return data.map((item: any, index: any) => (
-      <PointMarker
-        key={index}
-        content={item.name}
-        center={{ lat: item.latitude, lng: item.longitude }}
-      />
-    ))
-  }
+  
+  const { mapData, userCoords, openMap, setMapState } = getMapData(); 
+  
+  /* const [mapData, setMapData] = useState(undefined);
+  const [userCoords, setUserCoords] = useState(undefined); */
+
+
 
   const locations = [
     {
@@ -94,35 +95,81 @@ const Map: React.FC = () => {
     }
   ]
 
-  const PointMarker = ({ center, content }: any) => {
+  const PointMarker = ({ center, name, id }: any) => {
     const map = useMap()
     const markerRef = useRef(null)
+    map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+
 
     return (
       <Marker ref={markerRef} position={center}>
-        <Popup>{content}</Popup>
+        <Popup>
+
+        <a className='p-1 flex flex-row gap-2 items-center' href={`/parada/${id}`}>
+                    <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
+                    <p className='w-auto h-auto break-words text-base !my-0'>{name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)).join(' ')}</p>
+                  </a>
+
+        </Popup>
       </Marker>
     )
   }
 
+
+  const MyMarkers = ({ data }: any) => {
+    return data.map((item: any, index: any) => (
+      <PointMarker
+        //key={index}
+        name={item.name}
+        id={item.id}
+        center={{ lat: item.latitude, lng: item.longitude }}
+      />
+    ))
+  }
+/*   const testu = async () => {
+    console.log("Juan");
+    setNumTest(numTest + 1);
+    console.log("el mapodato abajo")
+    console.log(mapData)
+    console.log("el mapodato arriba")
+    
+
+  };
+   */
+
+
   useEffect(() => {
     console.log('Lecum twice')
     setTest('juan')
+    console.log(mapData)
+    console.log(userCoords)
+    console.log(typeof(mapData))
     // add navigate to user location
-  }, [mapData])
+  }, [mapData, numTest])
 
-  if (mapData !== undefined) {
-    return null // or return some loading indicator if needed
+  if (!openMap) {
+    return (
+/*       <button className='testButton' onClick={testu}>Mapabutton sin na</button>
+ */ null    
+)
   }
 
+  const closeMap = () => {
+setMapState(false)
+  }
+
+//todo: Mejorar el cierre del mapa
   return (
-    <MapContainer style={{ width: '100%', height: '100vh' }} center={[28.126, -15.432]} /* center={[userCoords === undefined ? '28.126' : getLatitude(userCoords!), userCoords === undefined ? '-15.438' : getLongitude(userCoords!)]} */ zoom={13} scrollWheelZoom={false}>
+    <>
+    <MapContainer style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  zoom={13} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MyMarkers data={locations} />
+      <MyMarkers data={mapData} />
     </MapContainer>
+    <button className='btn' onClick={closeMap}>Cerrar</button>
+    </>
   )
 }
 

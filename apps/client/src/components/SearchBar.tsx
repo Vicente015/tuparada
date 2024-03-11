@@ -29,7 +29,7 @@ export default function SearchBar () {
     latitude: 0
   })
   const [closerStops, setCloserStops] = useState<any>()
-  const { addStops, addStopsCoords, addUserCoords, mapData } = getMapData()
+  const { addStops, addStopsCoords, addUserCoords, mapData, setMapState } = getMapData()
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
@@ -38,9 +38,10 @@ export default function SearchBar () {
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
   }, [searchValue])
 
-  /* const closeStops =  */useEffect(() => {
-    // CHANGE
-
+  useEffect(() => { //todo : encontrar mejor manera de implementar
+    setMapState(false)
+  },[])
+useEffect(() => {
     const { latitude, longitude } = userLocation
     const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
 
@@ -50,12 +51,14 @@ export default function SearchBar () {
       }).filter(found => found?.latitude && found?.longitude) // Filter out any undefined elements
     // console.log(newFoundElements)
     // console.log(nearbyCords)
-    // console.log(nearbyStops)
+     console.log("el userLocatio hook se ha ejecutado")
     addStops(nearbyStops as any)
     addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
     setCloserStops(nearbyStops)
   }, [userLocation])
+
+
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -63,6 +66,7 @@ export default function SearchBar () {
         (position) => {
           const { latitude, longitude } = position.coords
           setSearchLocal(true)
+          setMapState(true)
           setSearchValue('')
           setUserLocation({ latitude, longitude })
         },
