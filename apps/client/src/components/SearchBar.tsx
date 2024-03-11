@@ -48,7 +48,7 @@ export default function SearchBar () {
     addStops(nearbyStops)
     addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
-    setCloserStops(nearbyStops)
+    setCloserStops(nearbyStops as any)
   }, [userLocation])
 
   const getUserLocation = () => {
@@ -90,7 +90,7 @@ export default function SearchBar () {
 
         {(searchLocal) // y no hay resultados cercanos (matches.length > 0)
           ? (
-              closerStops.map(({ id, name }) => (
+              closerStops!.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
                   <a className='flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>

@@ -4,8 +4,7 @@ import type { GeolibInputCoordinates } from 'geolib/es/types'
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
-import type { GeolibInputCoordinates } from 'geolib/es/types'
-import { Icon } from 'leaflet'
+import { Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 
 
 
@@ -17,6 +16,17 @@ const Map: React.FC = () =>  {
   const PointMarker = ({ center, name, id, icon }: any) => {
     const map = useMap()
     const markerRef = useRef(null)
+
+var testBounds = [[28.300640, -15.716717],[27.889199, -15.144883]]
+
+var corner1 = latLng(28.300640, -15.716717),
+corner2 = latLng(27.889199, -15.144883),
+bounds = latLngBounds(corner1, corner2);
+//rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map)
+map.setMaxBounds(bounds)
+map.setMinZoom(10)
+
+
     map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
 
     return (
@@ -77,8 +87,8 @@ const Map: React.FC = () =>  {
   }
 
   return (
-    <>
-    <MapContainer style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  zoom={15} scrollWheelZoom={true}>
+    
+    <MapContainer  style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  zoom={15} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -86,9 +96,10 @@ const Map: React.FC = () =>  {
       <MyMarkers data={mapData} />
       <UserMarker coords={userCoords}/>
     </MapContainer>
-    <button className='btn' onClick={closeMap}>Cerrar</button>
-    </>
+ 
+    
   )
+     /* <button className='btn' onClick={closeMap}>Cerrar</button> */
 }
 
 export default Map
