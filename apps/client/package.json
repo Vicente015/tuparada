@@ -24,12 +24,14 @@
     "match-sorter": "^6.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-loading-skeleton": "^3.4.0",
     "server": "workspace:*",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
     "use-local-storage-state": "^19.1.0"
   },
   "devDependencies": {
+    "@total-typescript/ts-reset": "^0.5.1",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19"
   }

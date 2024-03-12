@@ -5,7 +5,7 @@ interface Props {
   stop: number
 }
 
-const StarStop: React.FC<Props> = ({ stop }) => {
+const StarButton: React.FC<Props> = ({ stop }) => {
   const { starredStops, starStop, unStarStop } = useLocalStorage()
   const isStopSaved = starredStops?.includes(stop)
   const onStarClick = () => { isStopSaved ? unStarStop(stop) : starStop(stop) }
@@ -17,4 +17,4 @@ const StarStop: React.FC<Props> = ({ stop }) => {
   )
 }
 
-export default StarStop
+export default StarButton

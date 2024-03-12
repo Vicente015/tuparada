@@ -1,129 +1,115 @@
 import 'leaflet/dist/leaflet.css'
 import { getLatitude, getLongitude } from 'geolib'
+import type { GeolibInputCoordinates } from 'geolib/es/types'
 import { useEffect, useRef, useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
+import { Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 
-const Map: React.FC = () => {
-  const { mapData, userCoords } = getMapData()
-  const userCoordsTest = userCoords
-  const [test, setTest] = useState('')
+
+
+
+
+const Map: React.FC = () =>  {
+  const { mapData, userCoords, openMap, setMapState } = getMapData(); 
+  const [Zoom, setZoomHook] = useState(9);
+
+
+  const PointMarker = ({ center, name, id, icon }: any) => {
+    const markerRef = useRef(null)
+  const map = useMap()
+    var corner1 = latLng(28.300640, -15.716717), //todo: change to use userCoords as reference
+    corner2 = latLng(27.889199, -15.144883),
+    bounds = latLngBounds(corner1, corner2);
+    //rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map)
+    map.setMaxBounds(bounds)
+    map.setMinZoom(10)
+    map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+
+    return (
+      <Marker ref={markerRef} position={center} icon={icon!==undefined? icon:busStopIcon}>
+        {name?
+          <Popup>
+            <a className='p-1 flex flex-row gap-2 items-center' href={`/parada/${id}`}>
+              <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
+              <p className='w-auto h-auto break-words text-base !my-0'>{name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.toLowerCase().slice(1)).join(' ')}</p>
+            </a>
+          </Popup> 
+        :
+          <></>
+        }
+      </Marker>
+    )
+  }
+
+  const MapEvents = () => {
+  const map = useMap()
+    useMapEvents({
+      zoomend() { // zoom event (when zoom animation ended)
+        const zoom = map.getZoom(); // get current Zoom of map
+        setZoomHook(zoom);
+      },
+    });
+    return false;
+  };
 
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (
       <PointMarker
-        key={index}
-        content={item.name}
+        //key={index} might be needed later
+        name={item.name}
+        id={item.id}
         center={{ lat: item.latitude, lng: item.longitude }}
       />
     ))
   }
 
-  const locations = [
-    {
-      id: '772',
-      name: 'C/ PINTOR JUAN GUILLERMO (C.C. LA MINILLA)',
-      latitude: '28.12556023',
-      longitude: '-15.43871993'
-    },
-    {
-      id: '770',
-      name: 'C/ PINTOR JUAN GUILLERMO, FRENTE 19',
-      latitude: '28.12753066',
-      longitude: '-15.43765411'
-    },
-    {
-      id: '779',
-      name: 'AVDA. GARCIA LORCA, FRENTE 14',
-      latitude: '28.12791265',
-      longitude: '-15.43881179'
-    },
-    {
-      id: '789',
-      name: 'AVDA. GARCIA LORCA, 17',
-      latitude: '28.12521295',
-      longitude: '-15.44032022'
-    },
-    {
-      id: '703',
-      name: 'AVDA. DE ANSITE (CEMENTERIO DEL PUERTO)',
-      latitude: '28.12391100',
-      longitude: '-15.43858200'
-    },
-    {
-      id: '702',
-      name: 'AVDA. DE ANSITE ( FRENTE CEMENTERIO DEL PUERTO)',
-      latitude: '28.12374403',
-      longitude: '-15.43849903'
-    },
-    {
-      id: '312',
-      name: 'PASEO DE CHIL (ESTADIO INSULAR)',
-      latitude: '28.12817245',
-      longitude: '-15.43540648'
-    },
-    {
-      id: '777',
-      name: 'C/ HABANA, 28',
-      latitude: '28.12923800',
-      longitude: '-15.43977800'
-    },
-    {
-      id: '768',
-      name: 'C/ HABANA, 27',
-      latitude: '28.12935000',
-      longitude: '-15.43959200'
-    },
-    {
-      id: '497',
-      name: 'AVDA. MESA Y LÓPEZ, 85',
-      latitude: '28.12973954',
-      longitude: '-15.44068230'
-    },
-    {
-      id: '301',
-      name: 'AVDA. ESCALERITAS (CLUB LA CORNISA)',
-      latitude: '28.12305500',
-      longitude: '-15.43593238'
-    },
-    {
-      id: '437',
-      name: 'AVDA. MESA Y LOPEZ, 86',
-      latitude: '28.13008803',
-      longitude: '-15.44059819'
-    }
-  ]
-
-  const PointMarker = ({ center, content }: any) => {
-    const map = useMap()
-    const markerRef = useRef(null)
-
-    return (
-      <Marker ref={markerRef} position={center}>
-        <Popup>{content}</Popup>
-      </Marker>
+  const UserMarker = ({coords}:any) => {
+    return(
+      <PointMarker
+        //key={index}
+        center={{ lat: getLatitude(coords), lng: getLongitude(coords) }}
+        icon={mapIcon}
+      />
     )
   }
 
-  useEffect(() => {
-    console.log('Lecum twice')
-    setTest('juan')
-    // add navigate to user location
-  }, [mapData])
+  const mapIcon = new Icon({
+    iconUrl:'../../public/circle-user.svg',
+    iconSize:     [20, 20],
+  })
+  const busStopIcon = new Icon({
+    iconUrl:'../../public/bus-stop.svg',
+    iconSize:     [19, 20],
+  })
 
-  if (mapData !== undefined) {
-    return null // or return some loading indicator if needed
+  //todo: Mejorar el cierre del mapa
+  const closeMap = () => {
+    setMapState(false)
+  }
+    
+  if (!openMap) {
+    return (
+      null    
+    )
   }
 
   return (
-    <MapContainer style={{ width: '100%', height: '100vh' }} center={[28.126, -15.432]} /* center={[userCoords === undefined ? '28.126' : getLatitude(userCoords!), userCoords === undefined ? '-15.438' : getLongitude(userCoords!)]} */ zoom={13} scrollWheelZoom={false}>
+    
+    <MapContainer  style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  zoom={15} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MyMarkers data={locations} />
+      <MapEvents /> 
+      
+      {Zoom >=15 ? <MyMarkers data={mapData} /> : null}
+      <UserMarker coords={userCoords}/>
     </MapContainer>
+ 
+    
   )
+     /* <button className='btn' onClick={closeMap}>Cerrar</button> */
 }
 
 export default Map
