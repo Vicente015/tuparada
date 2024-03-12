@@ -4,16 +4,19 @@ import useLocalStorageState from 'use-local-storage-state'
 
 export function getMapData () {
   const [mapData, setMapData] = useLocalStorageState<GeolibInputCoordinates[]>('mapData')
-  const [stopCoords, setStopCoors] = useState<GeolibInputCoordinates[]>()
+  //const [allCoords, setAllCoords] = useState<GeolibInputCoordinates[]>()
   const [userCoords, setUserCoors] = useLocalStorageState<GeolibInputCoordinates>('userCoords')
-  const [openMap, setOpenMap] = useLocalStorageState<boolean>('openMap', { defaultValue: false })
+  const [openMap, setOpenMap] = useLocalStorageState<Boolean>('openMap', { defaultValue: false })
+  const [numClick, setNumClicks] = useLocalStorageState('numClick',{defaultValue:0})
+
 
   const addStops = (coords: GeolibInputCoordinates[]) => {
     setMapData(coords)
   }
-  const addStopsCoords = (coords: GeolibInputCoordinates[]) => {
-    setStopCoors(coords)
-  }
+ /*   const addAllCoords = (coords: GeolibInputCoordinates[]) => {
+    //console.log(coords)
+    setAllCoords(coords)
+  }  */
   const addUserCoords = (coords: GeolibInputCoordinates) => {
     setUserCoors(coords)
   }
@@ -22,14 +25,20 @@ export function getMapData () {
     setOpenMap(open)
   }
 
+  const addClick = () =>{
+    console.log(numClick)
+    setNumClicks(numClick+1)
+  }
+
   return {
     mapData,
     userCoords,
     openMap,
+    numClick,
     setMapState,
     addStops,
-    addStopsCoords,
-    addUserCoords
+    addUserCoords,
+    addClick
 
   }
 }
