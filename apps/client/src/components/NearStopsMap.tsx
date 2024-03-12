@@ -1,18 +1,28 @@
 import 'leaflet/dist/leaflet.css'
 import { getLatitude, getLongitude } from 'geolib'
 import type { GeolibInputCoordinates } from 'geolib/es/types'
+import stops from '../../../server/src/data/paradas.json'
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
-import { Icon, latLng, latLngBounds, rectangle } from 'leaflet'
+import { Bounds, Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 
 
-
+const coordinates = stops
+  .filter((item) => item.latitude !== undefined && item.longitude !== undefined)
+  .map(item => ({
+    ...item,
+    latitude: parseFloat(item.latitude ?? '0'),
+    longitude: parseFloat(item.longitude ?? '0')
+  }))
 
 
 const Map: React.FC = () =>  {
-  const { mapData, userCoords, openMap, setMapState } = getMapData(); 
+  const { mapData, userCoords, openMap, setMapState,numClick } = getMapData(); 
   const [Zoom, setZoomHook] = useState(9);
+  const [firstZoom, setFirstZoom] = useState(true)
+  const [loadedStops, setLoadedStops] = useState<any[]>() //change any to type
+  const [map, setMap] = useState<any>(null); //change any to type
 
 
   const PointMarker = ({ center, name, id, icon }: any) => {
@@ -24,7 +34,7 @@ const Map: React.FC = () =>  {
     //rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map)
     map.setMaxBounds(bounds)
     map.setMinZoom(10)
-    map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+    //map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
 
     return (
       <Marker ref={markerRef} position={center} icon={icon!==undefined? icon:busStopIcon}>
@@ -47,11 +57,32 @@ const Map: React.FC = () =>  {
     useMapEvents({
       zoomend() { // zoom event (when zoom animation ended)
         const zoom = map.getZoom(); // get current Zoom of map
-        setZoomHook(zoom);
+        setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
+        juan(map)
       },
+      dragend(){
+        if(map.getZoom()>=16){
+          console.log("sa movio")
+        }
+      }
     });
     return false;
-  };
+  }
+
+  function juan(map:any){
+    //const map = useMap()
+    console.log(firstZoom)
+    if(firstZoom){
+      map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+      setFirstZoom(false)
+    }
+    if(map.getZoom()>=16){
+      console.log("tamo cerquita")
+    }
+      
+  }
+   
+
 
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (
@@ -74,6 +105,85 @@ const Map: React.FC = () =>  {
     )
   }
 
+const GetMapData =()=>{
+const map = useMap()
+let stopsInView: { latitude: number; longitude: number; id: string; name: string }[] =[]
+let bounds = map.getBounds()
+console.log(bounds)
+useMapEvents({
+  zoomend() { // zoom event (when zoom animation ended)
+    /* const zoom = map.getZoom(); // get current Zoom of map
+    setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
+    juan(map) */
+    stopsInView =[]
+    console.log("el zoomo")
+    for(let item of coordinates){
+      if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
+        
+        stopsInView.push(item)
+      }
+    }
+    updateLoadedStops(stopsInView)
+  },dragend(){
+    stopsInView =[]
+
+    for(let item of coordinates){
+      if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
+        
+        stopsInView.push(item)
+      }
+    }
+    console.log(stopsInView)
+    //updateLoadedStops(stopsInView)
+  }
+});
+
+for(let item of coordinates){
+  if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
+    
+    stopsInView.push(item)
+  }
+}
+console.log(stopsInView)
+//updateLoadedStops(stopsInView)
+  return null;
+}
+
+
+  const updateLoadedStops = (coords: typeof coordinates) => {
+    //const map = useMap()
+    // Filter out elements from newArray that are already in loadedStops
+    const uniqueNewElements = coords.filter((element) => !loadedStops!.includes(element));
+
+    // Combine the unique elements from newArray with the current loadedStops
+    const updatedStops = [...loadedStops!, ...uniqueNewElements];
+
+    // Update the state with the new array
+    setLoadedStops(updatedStops);
+
+    // If you want to return the updated array, you can do so
+    //return updatedStops;
+  };
+
+  useEffect(() =>{
+    setLoadedStops(mapData)
+    console.log("Datos inizializados")
+  
+  },[])
+ 
+useEffect(() =>{
+  console.log("useEffect se ejecuta")
+  console.log(loadedStops)
+  console.log(coordinates)
+if(loadedStops!==undefined){
+  //const updatedArray = updateLoadedStops(coordinates as any);
+    //console.log('Updated Array:', updatedArray);
+  }
+
+},[numClick])
+
+
+
   const mapIcon = new Icon({
     iconUrl:'../../public/circle-user.svg',
     iconSize:     [20, 20],
@@ -94,17 +204,27 @@ const Map: React.FC = () =>  {
     )
   }
 
+
+
   return (
     
-    <MapContainer  style={{ width: '100%', height: '50vh' }} center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  zoom={15} scrollWheelZoom={true}>
+    <MapContainer  
+    style={{ width: '100%', height: '50vh' }} 
+    center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  
+    zoom={15} 
+    scrollWheelZoom={true}
+    
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <MapEvents /> 
       
-      {Zoom >=15 ? <MyMarkers data={mapData} /> : null}
+      {Zoom >=15 ? <MyMarkers data={mapData} /> : null }
+      <GetMapData/>
       <UserMarker coords={userCoords}/>
+     
     </MapContainer>
  
     

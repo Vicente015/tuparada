@@ -28,7 +28,7 @@ export default function SearchBar () {
     latitude: 0
   })
   const [closerStops, setCloserStops] = useState<typeof coordinates>()
-  const { addStops, addStopsCoords, addUserCoords, mapData, setMapState } = getMapData()
+  const { addStops,  addUserCoords, mapData, setMapState, numClick, addClick } = getMapData()
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
@@ -43,11 +43,10 @@ export default function SearchBar () {
   }, [])
   useEffect(() => {
     const { latitude, longitude } = userLocation
-    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 900)
-
+    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
     const nearbyStops = nearbyCords.filter(Boolean)
+
     addStops(nearbyStops)
-    addStopsCoords(nearbyCords)
     addUserCoords(userLocation)
     setCloserStops(nearbyStops as any)
   }, [userLocation])
@@ -56,6 +55,7 @@ export default function SearchBar () {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords
+        addClick()
         setSearchLocal(true)
         setMapState(true)
         setSearchValue('')
@@ -89,7 +89,7 @@ export default function SearchBar () {
           </button>
         </Ariakit.ComboboxItem>
 
-        {(searchLocal) // y no hay resultados cercanos (matches.length > 0)
+        {(searchLocal) 
           ? (
               closerStops!.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
@@ -100,7 +100,7 @@ export default function SearchBar () {
                 </Ariakit.ComboboxItem>
               ))
             )
-          : (!searchLocal && matches.length > 0) // y no hay resultados cercanos (matches.length > 0)
+          : (!searchLocal && matches.length > 0) 
               ? (
                   matches.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
