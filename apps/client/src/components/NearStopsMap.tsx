@@ -113,7 +113,7 @@ const Map: React.FC = () =>  {
         console.log(userCoords)
         console.log(centerUser)
 
-        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom())&&
+        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], 15)&&
         setCenterUser(false)
       }
       setCenterUser(false)
@@ -135,8 +135,9 @@ const Map: React.FC = () =>  {
     console.log("effect normal")
     console.log(userCoords)
     console.log(centerUser)
+    console.log(mapData)
     setCenterUser(true) 
-    console.log(getLatitude(userCoords!))
+    //console.log(getLatitude(userCoords!))
     setLoadedStops(mapData)
     
   },[numClick])
