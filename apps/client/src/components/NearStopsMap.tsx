@@ -54,24 +54,24 @@ const Map: React.FC = () =>  {
 
   const MapEvents = () => {
   const map = useMap()
-    useMapEvents({
+    /* useMapEvents({
       zoomend() { // zoom event (when zoom animation ended)
-        const zoom = map.getZoom(); // get current Zoom of map
-        setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
-        juan(map)
+        //const zoom = map.getZoom(); // get current Zoom of map
+        //setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
+        //juan(map)
       },
-      dragend(){
+      /* dragend(){
         if(map.getZoom()>=16){
           console.log("sa movio")
         }
-      }
-    });
+      } 
+    }); */
     return false;
   }
 
-  function juan(map:any){
+  /* function juan(map:any){
     //const map = useMap()
-    console.log(firstZoom)
+    //console.log(firstZoom)
     if(firstZoom){
       map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
       setFirstZoom(false)
@@ -80,7 +80,7 @@ const Map: React.FC = () =>  {
       console.log("tamo cerquita")
     }
       
-  }
+  } */
    
 
 
@@ -108,15 +108,18 @@ const Map: React.FC = () =>  {
 const GetMapData =()=>{
 const map = useMap()
 let stopsInView: { latitude: number; longitude: number; id: string; name: string }[] =[]
-let bounds = map.getBounds()
-console.log(bounds)
+//let bounds = map.getBounds()
+//console.log(bounds)
 useMapEvents({
   zoomend() { // zoom event (when zoom animation ended)
-    /* const zoom = map.getZoom(); // get current Zoom of map
+    /* const zoom = map.getZoom(); /</ get current Zoom of map
     setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
     juan(map) */
+    const zoom = map.getZoom(); // get current Zoom of map
+    setZoomHook(zoom);//todo : fix jerk
+    let bounds = map.getBounds()
     stopsInView =[]
-    console.log("el zoomo")
+    //console.log("el zoomo")
     for(let item of coordinates){
       if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
         
@@ -125,34 +128,35 @@ useMapEvents({
     }
     updateLoadedStops(stopsInView)
   },dragend(){
+    let bounds = map.getBounds()
     stopsInView =[]
-
+    //console.log("gradados")
     for(let item of coordinates){
       if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
         
         stopsInView.push(item)
       }
     }
-    console.log(stopsInView)
-    //updateLoadedStops(stopsInView)
+    //console.log(stopsInView)
+    //console.log(map.getZoom())
+    updateLoadedStops(stopsInView)
   }
 });
-
+/* 
 for(let item of coordinates){
   if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
     
     stopsInView.push(item)
   }
 }
-console.log(stopsInView)
+console.log(stopsInView) */
 //updateLoadedStops(stopsInView)
   return null;
 }
 
 
   const updateLoadedStops = (coords: typeof coordinates) => {
-    //const map = useMap()
-    // Filter out elements from newArray that are already in loadedStops
+// Filter out elements from newArray that are already in loadedStops
     const uniqueNewElements = coords.filter((element) => !loadedStops!.includes(element));
 
     // Combine the unique elements from newArray with the current loadedStops
@@ -173,8 +177,6 @@ console.log(stopsInView)
  
 useEffect(() =>{
   console.log("useEffect se ejecuta")
-  console.log(loadedStops)
-  console.log(coordinates)
 if(loadedStops!==undefined){
   //const updatedArray = updateLoadedStops(coordinates as any);
     //console.log('Updated Array:', updatedArray);
@@ -219,9 +221,9 @@ if(loadedStops!==undefined){
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapEvents /> 
+     {/*  <MapEvents />  */}
       
-      {Zoom >=15 ? <MyMarkers data={mapData} /> : null }
+      {Zoom >=12 ? <MyMarkers data={loadedStops} /> : null }
       <GetMapData/>
       <UserMarker coords={userCoords}/>
      
