@@ -19,7 +19,7 @@ const coordinates = stops
 
 const Map: React.FC = () =>  {
   const { mapData, userCoords, openMap, setMapState,numClick } = getMapData(); 
-  const [Zoom, setZoomHook] = useState(9);
+  const [Zoom, setZoomHook] = useState(15);
   const [firstZoom, setFirstZoom] = useState(true)
   const [loadedStops, setLoadedStops] = useState<any[]>() //change any to type
   const [map, setMap] = useState<any>(null); //change any to type
@@ -27,14 +27,12 @@ const Map: React.FC = () =>  {
 
   const PointMarker = ({ center, name, id, icon }: any) => {
     const markerRef = useRef(null)
-  const map = useMap()
+    const map = useMap()
     var corner1 = latLng(28.300640, -15.716717), //todo: change to use userCoords as reference
     corner2 = latLng(27.889199, -15.144883),
     bounds = latLngBounds(corner1, corner2);
-    //rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map)
     map.setMaxBounds(bounds)
     map.setMinZoom(10)
-    //map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
 
     return (
       <Marker ref={markerRef} position={center} icon={icon!==undefined? icon:busStopIcon}>
@@ -52,23 +50,23 @@ const Map: React.FC = () =>  {
     )
   }
 
-  const MapEvents = () => {
+/*   const MapEvents = () => {
   const map = useMap()
-    /* useMapEvents({
+     useMapEvents({
       zoomend() { // zoom event (when zoom animation ended)
         //const zoom = map.getZoom(); // get current Zoom of map
         //setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
         //juan(map)
       },
-      /* dragend(){
+       dragend(){
         if(map.getZoom()>=16){
           console.log("sa movio")
         }
       } 
-    }); */
+    }); 
     return false;
   }
-
+ */
   /* function juan(map:any){
     //const map = useMap()
     //console.log(firstZoom)
@@ -176,11 +174,13 @@ console.log(stopsInView) */
   },[])
  
 useEffect(() =>{
+  setLoadedStops(mapData)
   console.log("useEffect se ejecuta")
-if(loadedStops!==undefined){
+  console.log(loadedStops)
+/* if(loadedStops!==undefined){
   //const updatedArray = updateLoadedStops(coordinates as any);
     //console.log('Updated Array:', updatedArray);
-  }
+  } */
 
 },[numClick])
 
