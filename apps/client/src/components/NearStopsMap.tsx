@@ -6,6 +6,9 @@ import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
 import { Bounds, Icon, latLng, latLngBounds, rectangle } from 'leaflet'
+import Skeleton from 'react-loading-skeleton'
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 
 const coordinates = stops
@@ -20,9 +23,9 @@ const coordinates = stops
 const Map: React.FC = () =>  {
   const { mapData, userCoords, openMap, setMapState,numClick } = getMapData(); 
   const [Zoom, setZoomHook] = useState(15);
-  const [firstZoom, setFirstZoom] = useState(true)
   const [loadedStops, setLoadedStops] = useState<any[]>() //change any to type
-  const [map, setMap] = useState<any>(null); //change any to type
+  const [loading, setLoading] = useState(true);
+
 
 
   const PointMarker = ({ center, name, id, icon }: any) => {
@@ -110,14 +113,11 @@ let stopsInView: { latitude: number; longitude: number; id: string; name: string
 //console.log(bounds)
 useMapEvents({
   zoomend() { // zoom event (when zoom animation ended)
-    /* const zoom = map.getZoom(); /</ get current Zoom of map
-    setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
-    juan(map) */
-    const zoom = map.getZoom(); // get current Zoom of map
-    setZoomHook(zoom);//todo : fix jerk
+    const zoom = map.getZoom() // get current Zoom of map
     let bounds = map.getBounds()
     stopsInView =[]
-    //console.log("el zoomo")
+    setZoomHook(zoom)
+
     for(let item of coordinates){
       if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
         
@@ -140,32 +140,27 @@ useMapEvents({
     updateLoadedStops(stopsInView)
   }
 });
-/* 
-for(let item of coordinates){
-  if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
-    
-    stopsInView.push(item)
-  }
-}
-console.log(stopsInView) */
-//updateLoadedStops(stopsInView)
+ useEffect(() =>{
+  //setLoadedStops(mapData)
+  console.log("useEffect se ejecuta")
+  console.log(loadedStops)
+  //map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+
+},[numClick]) 
+
   return null;
 }
 
 
   const updateLoadedStops = (coords: typeof coordinates) => {
-// Filter out elements from newArray that are already in loadedStops
-    const uniqueNewElements = coords.filter((element) => !loadedStops!.includes(element));
 
-    // Combine the unique elements from newArray with the current loadedStops
+    const uniqueNewElements = coords.filter((element) => !loadedStops!.includes(element));
     const updatedStops = [...loadedStops!, ...uniqueNewElements];
 
-    // Update the state with the new array
     setLoadedStops(updatedStops);
-
-    // If you want to return the updated array, you can do so
-    //return updatedStops;
   };
+
+
 
   useEffect(() =>{
     setLoadedStops(mapData)
@@ -173,16 +168,18 @@ console.log(stopsInView) */
   
   },[])
  
-useEffect(() =>{
-  setLoadedStops(mapData)
-  console.log("useEffect se ejecuta")
-  console.log(loadedStops)
-/* if(loadedStops!==undefined){
-  //const updatedArray = updateLoadedStops(coordinates as any);
-    //console.log('Updated Array:', updatedArray);
-  } */
+  useEffect(() =>{
+    setLoadedStops(mapData)
+    console.log("useEffect se ejecuta")
+    console.log(loadedStops)
+    //map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+  },[numClick])
 
-},[numClick])
+  useEffect(() => { // ( ͡° ͜ʖ ͡°)
+    setTimeout(() => {
+    setLoading(false);
+    }, 1000);
+  }, []);
 
 
 
@@ -195,23 +192,20 @@ useEffect(() =>{
     iconSize:     [19, 20],
   })
 
-  //todo: Mejorar el cierre del mapa
-  const closeMap = () => {
-    setMapState(false)
-  }
-    
-  if (!openMap) {
-    return (
-      null    
+     
+  if (loading) { // ( ͡° ͜ʖ ͡°)
+     return (
+      <div className=' flex-1' style={{width:'100%', height:'50vh'}}>
+      <Skeleton height={'50vh'} />   
+      </div>
     )
-  }
-
+  } 
 
 
   return (
     
     <MapContainer  
-    style={{ width: '100%', height: '50vh' }} 
+    style={{ width: '100%', height: '50vh', zIndex:0 }} 
     center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  
     zoom={15} 
     scrollWheelZoom={true}
@@ -221,9 +215,8 @@ useEffect(() =>{
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-     {/*  <MapEvents />  */}
       
-      {Zoom >=12 ? <MyMarkers data={loadedStops} /> : null }
+      {Zoom >=13 ? <MyMarkers data={loadedStops} /> : null }
       <GetMapData/>
       <UserMarker coords={userCoords}/>
      
@@ -231,7 +224,6 @@ useEffect(() =>{
  
     
   )
-     /* <button className='btn' onClick={closeMap}>Cerrar</button> */
 }
 
 export default Map
