@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css'
 import { getLatitude, getLongitude } from 'geolib'
 import type { GeolibInputCoordinates } from 'geolib/es/types'
 import stops from '../../../server/src/data/paradas.json'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type DependencyList } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { getMapData } from '../hooks/getMapData'
 import { Bounds, Icon, latLng, latLngBounds, rectangle } from 'leaflet'
@@ -25,6 +25,7 @@ const Map: React.FC = () =>  {
   const [Zoom, setZoomHook] = useState(15);
   const [loadedStops, setLoadedStops] = useState<any[]>() //change any to type
   const [loading, setLoading] = useState(true);
+  const [centerUser, setCenterUser] = useState(false);
 
 
 
@@ -53,38 +54,6 @@ const Map: React.FC = () =>  {
     )
   }
 
-/*   const MapEvents = () => {
-  const map = useMap()
-     useMapEvents({
-      zoomend() { // zoom event (when zoom animation ended)
-        //const zoom = map.getZoom(); // get current Zoom of map
-        //setZoomHook(zoom);//todo : fix jerky motion when zooming in and out
-        //juan(map)
-      },
-       dragend(){
-        if(map.getZoom()>=16){
-          console.log("sa movio")
-        }
-      } 
-    }); 
-    return false;
-  }
- */
-  /* function juan(map:any){
-    //const map = useMap()
-    //console.log(firstZoom)
-    if(firstZoom){
-      map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
-      setFirstZoom(false)
-    }
-    if(map.getZoom()>=16){
-      console.log("tamo cerquita")
-    }
-      
-  } */
-   
-
-
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (
       <PointMarker
@@ -106,50 +75,52 @@ const Map: React.FC = () =>  {
     )
   }
 
-const GetMapData =()=>{
-const map = useMap()
-let stopsInView: { latitude: number; longitude: number; id: string; name: string }[] =[]
-//let bounds = map.getBounds()
-//console.log(bounds)
-useMapEvents({
-  zoomend() { // zoom event (when zoom animation ended)
-    const zoom = map.getZoom() // get current Zoom of map
-    let bounds = map.getBounds()
-    stopsInView =[]
-    setZoomHook(zoom)
+  const GetMapData =()=>{
+    const map = useMap()
+    let stopsInView: { latitude: number; longitude: number; id: string; name: string }[] =[]
 
-    for(let item of coordinates){
-      if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
+    useMapEvents({
+      zoomend() { // zoom event (when zoom animation ended)
+        const zoom = map.getZoom() // get current Zoom of map
+        let bounds = map.getBounds()
+        stopsInView =[]
+        setZoomHook(zoom)
+
+        for(let item of coordinates){
+          if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
+          stopsInView.push(item)
+          }
+        }
+        updateLoadedStops(stopsInView)
+      },
+      dragend(){
+        let bounds = map.getBounds()
+       stopsInView =[]
         
-        stopsInView.push(item)
+        for(let item of coordinates){
+         if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
+         stopsInView.push(item)
+         }
+       }
+
+        updateLoadedStops(stopsInView)
       }
-    }
-    updateLoadedStops(stopsInView)
-  },dragend(){
-    let bounds = map.getBounds()
-    stopsInView =[]
-    //console.log("gradados")
-    for(let item of coordinates){
-      if(bounds.contains([item.latitude,item.longitude]) && map.getZoom()>=16){
-        
-        stopsInView.push(item)
+    });
+
+    useEffect(() =>{
+      if(centerUser && getLatitude(userCoords!) !== 0){
+        console.log("effect del componente")
+        console.log(userCoords)
+        console.log(centerUser)
+
+        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom())&&
+        setCenterUser(false)
       }
-    }
-    //console.log(stopsInView)
-    //console.log(map.getZoom())
-    updateLoadedStops(stopsInView)
+      setCenterUser(false)
+    },[numClick]) 
+
+    return null;
   }
-});
- useEffect(() =>{
-  //setLoadedStops(mapData)
-  console.log("useEffect se ejecuta")
-  console.log(loadedStops)
-  //map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
-
-},[numClick]) 
-
-  return null;
-}
 
 
   const updateLoadedStops = (coords: typeof coordinates) => {
@@ -160,19 +131,14 @@ useMapEvents({
     setLoadedStops(updatedStops);
   };
 
-
-
   useEffect(() =>{
+    console.log("effect normal")
+    console.log(userCoords)
+    console.log(centerUser)
+    setCenterUser(true) 
+    console.log(getLatitude(userCoords!))
     setLoadedStops(mapData)
-    console.log("Datos inizializados")
-  
-  },[])
- 
-  useEffect(() =>{
-    setLoadedStops(mapData)
-    console.log("useEffect se ejecuta")
-    console.log(loadedStops)
-    //map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], map.getZoom());
+    
   },[numClick])
 
   useEffect(() => { // ( ͡° ͜ʖ ͡°)
@@ -180,6 +146,30 @@ useMapEvents({
     setLoading(false);
     }, 1000);
   }, []);
+
+
+
+const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => {
+  const isFirst = useRef(true);
+  useEffect(() => {
+    if (!isFirst.current) {
+      callback();
+    }
+  }, deps);
+
+  useEffect(() => {
+    isFirst.current = false;
+  }, []);
+};
+
+
+
+
+ 
+
+
+
+
 
 
 
@@ -205,7 +195,7 @@ useMapEvents({
   return (
     
     <MapContainer  
-    style={{ width: '100%', height: '50vh', zIndex:0 }} 
+    style={{ width: '100%', height: '55vh', zIndex:0 }} 
     center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  
     zoom={15} 
     scrollWheelZoom={true}
