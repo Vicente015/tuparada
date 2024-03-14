@@ -8,6 +8,7 @@ import { getMapData } from '../hooks/getMapData'
 import { Bounds, Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 import Skeleton from 'react-loading-skeleton'
 import "react-loading-skeleton/dist/skeleton.css";
+import LocationButton from './LocationButton'
 
 
 
@@ -113,7 +114,7 @@ const Map: React.FC = () =>  {
         console.log(userCoords)
         console.log(centerUser)
 
-        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], 15)&&
+        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], 16)&&
         setCenterUser(false)
       }
       setCenterUser(false)
@@ -194,11 +195,12 @@ const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => 
 
 
   return (
-    
+    <>
+    <section>
     <MapContainer  
-    style={{ width: '100%', height: '55vh', zIndex:0 }} 
+    style={{ width: '100%', height: '55vh', zIndex:0, }} 
     center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  
-    zoom={15} 
+    zoom={13} 
     scrollWheelZoom={true}
     
     >
@@ -212,8 +214,11 @@ const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => 
       <UserMarker coords={userCoords}/>
      
     </MapContainer>
- 
-    
+    </section>
+    <section className='absolute right-5 bottom-10'>
+    <LocationButton/>
+    </section>
+    </>
   )
 }
 
