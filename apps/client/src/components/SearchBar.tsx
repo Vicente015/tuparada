@@ -82,12 +82,12 @@ export default function SearchBar () {
         gutter={18}
         className="max-h-96 -ml-9 w-[22rem] relative overflow-y-scroll overflow-x-hidden flex flex-col p-1 bg-neutral-100 text-neutral-900 shadow-2xl rounded-md"
       >
-        <Ariakit.ComboboxItem>
+       {/*  <Ariakit.ComboboxItem>
           <button type='button' onClick={getUserLocation} className='p-2 w-full flex flex-row gap-2 border-b-[1px] border-b-neutral-200 cursor-pointer'>
             <MapPinIcon className='min-w-[3.5ch]' size={26}/>
             <p className='text-base w-auto text-neutral-950 font-semibold'>Buscar paradas cercanas</p>
           </button>
-        </Ariakit.ComboboxItem>
+        </Ariakit.ComboboxItem> */}
 
         {(searchLocal) 
           ? (
