@@ -11,22 +11,22 @@ export function getMapData () {
 
 
   const addStops = (coords: GeolibInputCoordinates[]) => {
-    console.log(coords)
+    //console.log(coords)
     setMapData(coords)
   }
 
   const addUserCoords = (coords: GeolibInputCoordinates) => {
-    console.log(coords)
+    //console.log(coords)
     setUserCoors(coords)
   }
 
   const setMapState = (open: Boolean) => {
-    console.log(open)
+    //console.log(open)
     setOpenMap(open)
   }
 
   const addClick = () =>{
-    console.log("click")
+    //console.log("click")
     setNumClicks(numClick+1)
   }
 

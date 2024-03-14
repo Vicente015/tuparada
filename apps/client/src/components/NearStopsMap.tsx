@@ -110,10 +110,6 @@ const Map: React.FC = () =>  {
 
     useEffect(() =>{
       if(centerUser && getLatitude(userCoords!) !== 0){
-        console.log("effect del componente")
-        console.log(userCoords)
-        console.log(centerUser)
-
         map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], 16)&&
         setCenterUser(false)
       }
@@ -133,12 +129,7 @@ const Map: React.FC = () =>  {
   };
 
   useEffect(() =>{
-    console.log("effect normal")
-    console.log(userCoords)
-    console.log(centerUser)
-    console.log(mapData)
     setCenterUser(true) 
-    //console.log(getLatitude(userCoords!))
     setLoadedStops(mapData)
     
   },[numClick])
@@ -202,7 +193,6 @@ const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => 
     center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}  
     zoom={13} 
     scrollWheelZoom={true}
-    
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -216,7 +206,7 @@ const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => 
     </MapContainer>
     </section>
     <section className='absolute right-5 bottom-10'>
-    <LocationButton/>
+      <LocationButton/>
     </section>
     </>
   )
