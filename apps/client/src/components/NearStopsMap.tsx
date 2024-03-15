@@ -27,6 +27,7 @@ const Map: React.FC = () =>  {
   const [loadedStops, setLoadedStops] = useState<any[]>() //change any to type
   const [loading, setLoading] = useState(true);
   const [centerUser, setCenterUser] = useState(false);
+  const defaultData = [{'id': "000",latitude: 0,longitude: 0,name: "DONT LOOK HERE"}]
 
 
 
@@ -58,7 +59,7 @@ const Map: React.FC = () =>  {
   const MyMarkers = ({ data }: any) => {
     return data.map((item: any, index: any) => (
       <PointMarker
-        //key={index} might be needed later
+        key={index} //pls dont break
         name={item.name}
         id={item.id}
         center={{ lat: item.latitude, lng: item.longitude }}
@@ -70,7 +71,7 @@ const Map: React.FC = () =>  {
     return(
       <PointMarker
         //key={index}
-        center={{ lat: getLatitude(coords), lng: getLongitude(coords) }}
+        center={{ lat: coords.latitude, lng: coords.longitude }}
         icon={mapIcon}
       />
     )
@@ -130,8 +131,7 @@ const Map: React.FC = () =>  {
 
   useEffect(() =>{
     setCenterUser(true) 
-    setLoadedStops(mapData)
-    
+    setLoadedStops(defaultData)
   },[numClick])
 
   useEffect(() => { // ( ͡° ͜ʖ ͡°)
@@ -199,7 +199,7 @@ const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => 
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      {Zoom >=13 ? <MyMarkers data={loadedStops} /> : null }
+      {Zoom >=13 ? <MyMarkers data={loadedStops==undefined?defaultData:loadedStops} /> : null }
       <GetMapData/>
       <UserMarker coords={userCoords}/>
      
