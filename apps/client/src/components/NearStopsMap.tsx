@@ -32,16 +32,16 @@ const Map: React.FC = () =>  {
 
 
   const PointMarker = ({ center, name, id, icon }: any) => {
-    const markerRef = useRef(null)
+ 
     const map = useMap()
-    var corner1 = latLng(28.300640, -15.716717), //todo: change to use userCoords as reference
+    var corner1 = latLng(28.300640, -15.716717), //todo: change to use userCoords as reference (or not)
     corner2 = latLng(27.889199, -15.144883),
     bounds = latLngBounds(corner1, corner2);
     map.setMaxBounds(bounds)
     map.setMinZoom(10)
 
     return (
-      <Marker ref={markerRef} position={center} icon={icon!==undefined? icon:busStopIcon}>
+      <Marker position={center} icon={icon!==undefined? icon:errorIcon}>
         {name?
           <Popup>
             <a className='p-1 flex flex-row gap-2 items-center' href={`/parada/${id}`}>
@@ -63,6 +63,7 @@ const Map: React.FC = () =>  {
         name={item.name}
         id={item.id}
         center={{ lat: item.latitude, lng: item.longitude }}
+        icon={busStopIcon}
       />
     ))
   }
@@ -70,7 +71,6 @@ const Map: React.FC = () =>  {
   const UserMarker = ({coords}:any) => {
     return(
       <PointMarker
-        //key={index}
         center={{ lat: coords.latitude, lng: coords.longitude }}
         icon={mapIcon}
       />
@@ -111,7 +111,7 @@ const Map: React.FC = () =>  {
 
     useEffect(() =>{
       if(centerUser && getLatitude(userCoords!) !== 0){
-        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], 16)&&
+        map.flyTo([getLatitude(userCoords!), getLongitude(userCoords!)], 16)
         setCenterUser(false)
       }
       setCenterUser(false)
@@ -141,37 +141,16 @@ const Map: React.FC = () =>  {
   }, []);
 
 
-
-const useOnUpdate = (callback: () => void, deps: DependencyList | undefined) => {
-  const isFirst = useRef(true);
-  useEffect(() => {
-    if (!isFirst.current) {
-      callback();
-    }
-  }, deps);
-
-  useEffect(() => {
-    isFirst.current = false;
-  }, []);
-};
-
-
-
-
- 
-
-
-
-
-
-
-
   const mapIcon = new Icon({
     iconUrl:'../../public/circle-user.svg',
     iconSize:     [20, 20],
   })
   const busStopIcon = new Icon({
     iconUrl:'../../public/bus-stop.svg',
+    iconSize:     [19, 20],
+  })
+  const errorIcon = new Icon({
+    iconUrl:'../../public/error-icon.svg',
     iconSize:     [19, 20],
   })
 
