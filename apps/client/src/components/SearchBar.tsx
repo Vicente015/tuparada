@@ -28,7 +28,7 @@ export default function SearchBar () {
     latitude: 0
   })
   const [closerStops, setCloserStops] = useState<typeof coordinates>()
-  const { addStops,  addUserCoords, mapData, setMapState, numClick, addClick } = getMapData()
+  const { addClick, addStops, addUserCoords, mapData, numClick, setMapState } = getMapData()
 
   const matches = useMemo(() => {
     // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
@@ -89,7 +89,7 @@ export default function SearchBar () {
           </button>
         </Ariakit.ComboboxItem> */}
 
-        {(searchLocal) 
+        {(searchLocal)
           ? (
               closerStops!.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
@@ -100,7 +100,7 @@ export default function SearchBar () {
                 </Ariakit.ComboboxItem>
               ))
             )
-          : (!searchLocal && matches.length > 0) 
+          : (!searchLocal && matches.length > 0)
               ? (
                   matches.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
