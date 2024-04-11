@@ -11,7 +11,7 @@ const Wrapper: React.FC<PropsWithChildren> = ({ children }) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: (isProd ? 'https://tuparada.vicente015.dev' : 'http://localhost:4321') + '/trpc',
+          url: (isProd ? 'https://apituparada.vicente015.dev' : 'http://localhost:4321') + '/trpc',
         })
       ]
     })
