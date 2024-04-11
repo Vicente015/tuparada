@@ -6,10 +6,11 @@ import {
 } from '@trpc/server/adapters/fastify'
 import fastify from 'fastify'
 import { renderTrpcPanel } from 'trpc-panel'
-import { z } from 'zod'
 import { createContext } from './context.js'
 import { appRouter, type AppRouter } from './routers/_app.js'
+import env from './env.js'
 
+const isProd = env.NODE_ENV === 'production'
 const envToLogger = {
   development: {
     transport: {
@@ -24,23 +25,19 @@ const envToLogger = {
   test: false
 }
 
-const env = z.object({
-  NODE_ENV: z.literal('development').or(z.literal('production'))
-}).parse(process.env)
-
 const server = fastify({
   maxParamLength: 5000,
   logger: envToLogger[env.NODE_ENV] ?? true
 })
 
 await server.register(cors, {
-  origin: env.NODE_ENV === 'production' ? 'https://tuparada.vicente015.dev' : 'http://localhost:4321'
+  origin: isProd ? 'https://tuparada.vicente015.dev' : 'http://localhost:4321'
 })
 await server.register(fastifyCaching,
   {
     privacy: fastifyCaching.privacy.PUBLIC,
     expiresIn: 10,
-    logLevel: env.NODE_ENV === 'production' ? 'warn' : 'debug'
+    logLevel: isProd ? 'warn' : 'debug'
   }
 )
 
