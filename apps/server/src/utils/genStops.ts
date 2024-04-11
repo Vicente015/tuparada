@@ -2,7 +2,6 @@ import { parse } from 'csv-parse/sync'
 import got from 'got'
 import fs from 'node:fs'
 import { z } from 'zod'
-import Constants from '../Constants.js'
 
 const TRANSIT_STOPS_PATH = 'src/data/transit/stops.csv'
 
@@ -50,7 +49,8 @@ function getDataFromTransit () {
 }
 
 async function getDataFromAPI () {
-  const APIStopsResponse = await got.get(`${Constants.API_URL}/paradas`, {
+  if (process.env.API_URL === undefined) throw new Error('Missing valid API_URL in .env file')
+  const APIStopsResponse = await got.get(`${process.env.API_URL}/paradas`, {
     headers: { accept: 'application/json' },
     responseType: 'json'
   })

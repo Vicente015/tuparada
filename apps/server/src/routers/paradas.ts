@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import got from 'got'
 import { z } from 'zod'
-import Constants from '../Constants.js'
 import stops from '../data/paradas.json' assert { type: 'json' }
 import { publicProcedure, router } from '../trpc.js'
 import getRouteColor from '../utils/getRouteColor.js'
@@ -38,9 +37,9 @@ export const paradasRouter = router({
     .input(InputSchema)
     .output(OutputSchema)
     .query(async ({ input }) => {
-      console.debug(input)
+      if (process.env.API_URL === undefined) throw new Error('Missing valid API_URL in .env file')
       const response = await got.get(
-        `${Constants.API_URL}/parada/${input.id}`,
+        `${process.env.API_URL}/parada/${input.id}`,
         {
           headers: { accept: 'application/json' },
           retry: { limit: 0 },

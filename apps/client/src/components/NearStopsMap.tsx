@@ -132,15 +132,15 @@ const Map: React.FC = () => {
   }, [])
 
   const mapIcon = new Icon({
-    iconUrl: '../../public/circle-user.svg',
+    iconUrl: '/circle-user.svg',
     iconSize: [20, 20]
   })
   const busStopIcon = new Icon({
-    iconUrl: '../../public/bus-stop.svg',
+    iconUrl: '/bus-stop.svg',
     iconSize: [19, 20]
   })
   const errorIcon = new Icon({
-    iconUrl: '../../public/error-icon.svg',
+    iconUrl: '/error-icon.svg',
     iconSize: [19, 20]
   })
 
