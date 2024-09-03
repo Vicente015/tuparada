@@ -6,7 +6,6 @@ import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
 import { getMapData } from '../hooks/getMapData'
 import { formatStopName } from '../utils/formatStopName'
-import normalizeAbbreviations from '../utils/normalizeAbbreviations'
 import { resolveAcronyms } from '../utils/acronymResolver'
 
 const coordinates = stops
@@ -18,8 +17,8 @@ const coordinates = stops
   }))
 
 export default function SearchBar () {
-  const stopsWithoutAbbv = useMemo(() => {
-    return stops.map((stop) => ({ ...stop, name: normalizeAbbreviations(stop.name) }))
+  const stopsWithResolvedNames = useMemo(() => {
+    return stops.map((stop) => ({ ...stop, name: resolveAcronyms(stop.name) }))
   }, [])
 
   const [searchValue, setSearchValue] = useState('')
@@ -33,7 +32,7 @@ export default function SearchBar () {
 
   const matches = useMemo(() => {
     const resolvedSearchValue = resolveAcronyms(searchValue)
-    const results = matchSorter(stopsWithoutAbbv, resolvedSearchValue, {
+    const results = matchSorter(stopsWithResolvedNames, resolvedSearchValue, {
       keys: ['id', 'name'],
       keepDiacritics: true,
       threshold: matchSorter.rankings.CONTAINS
