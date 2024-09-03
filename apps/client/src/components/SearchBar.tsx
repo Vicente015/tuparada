@@ -7,6 +7,7 @@ import stops from '../../../server/src/data/paradas.json'
 import { getMapData } from '../hooks/getMapData'
 import { formatStopName } from '../utils/formatStopName'
 import normalizeAbbreviations from '../utils/normalizeAbbreviations'
+import { resolveAcronyms } from '../utils/acronymResolver'
 
 const coordinates = stops
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)
@@ -31,8 +32,12 @@ export default function SearchBar () {
   const { addClick, addStops, addUserCoords, mapData, numClick, setMapState } = getMapData()
 
   const matches = useMemo(() => {
-    // todo: implementar resolvedor de acrónimos (ind. => industria, ctra. => carretera)
-    const results = matchSorter(stopsWithoutAbbv, searchValue, { keys: ['id', 'name'], keepDiacritics: true, threshold: matchSorter.rankings.CONTAINS })
+    const resolvedSearchValue = resolveAcronyms(searchValue)
+    const results = matchSorter(stopsWithoutAbbv, resolvedSearchValue, {
+      keys: ['id', 'name'],
+      keepDiacritics: true,
+      threshold: matchSorter.rankings.CONTAINS
+    })
     setSearchLocal(false)
     results.length = 100
     return results.sort((a, b) => parseInt(a.id) - parseInt(b.id))
