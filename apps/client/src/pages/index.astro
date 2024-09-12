@@ -3,24 +3,22 @@ import { HistoryIcon, StarIcon } from 'lucide-react'
 import Map from '../components/NearStopsMap.jsx'
 import RecentStops from '../components/RecentStops.jsx'
 import SearchBar from '../components/SearchBar.jsx'
-import StarredStops from '../components/StarredStops.jsx'
 import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Tu Parada" className="bg-neutral-100">
   <header class="flex flex-col font-serif w-full pt-8 bg-blue-600 text-white">
-    <h1 class="font-bold text-3xl text-center">Tu Parada</h1>
-    <p class="text-xl text-balance text-center">
-      Guarda un acceso directo a tu parada y consúltalo de forma rápida y
-      sencilla!
-    </p>
+
+      <h1 class="font-bold text-3xl text-center">Tu Parada</h1>
+      <p class="text-xl text-balance text-center mt-2">
+        Guarda un acceso directo a tu parada y consúltalo de forma rápida y sencilla!
+      </p>
+    </div>
     <div class="relative min-h-40 pt-5">
       <section class="-z-10">
         <Map client:only />
       </section>
-      <section
-        class="absolute inset-x-0 top-0 drop-shadow-lg z-10 max-w-[80ch] m-auto flex flex-col items-center justify-center mt-12"
-      >
+      <section class="absolute inset-x-0 top-0 drop-shadow-lg z-10 max-w-[80ch] m-auto flex flex-col items-center justify-center mt-12">
         <SearchBar client:load />
       </section>
     </div>
@@ -34,12 +32,12 @@ import Layout from '../layouts/Layout.astro';
       </h2>
       <RecentStops client:idle />
     </section>
-    <section>
-      <h2 class="text-2xl font-bold flex flex-row gap-2 items-center mb-2">
-        <StarIcon className="text-blue-800" size={32} />
-        Paradas favoritas
-      </h2>
-      <StarredStops client:load />
+
+    <section class="mt-8 flex justify-center">
+      <a href="/favoritos" class="inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-colors duration-200">
+        <StarIcon className="mr-2" size={24} />
+        Ver Paradas Favoritas
+      </a>
     </section>
   </main>
 </Layout>

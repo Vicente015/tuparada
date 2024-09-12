@@ -1,0 +1,26 @@
+---
+import { StarIcon, ArrowLeft } from 'lucide-react'
+import StarredStops from '../../components/StarredStops.jsx'
+import Layout from '../../layouts/Layout.astro'
+---
+
+<Layout title="Paradas Favoritas" className="bg-neutral-100">
+  <header class="bg-blue-600 text-white">
+    <div class="max-w-[80ch] mx-auto px-4 py-6 flex items-center">
+      <a href="/" class="text-white hover:text-blue-200 transition-colors">
+        <ArrowLeft size={24} alt="Volver" />
+      </a>
+      <h1 class="font-bold text-2xl  flex-grow text-center">Paradas Favoritas</h1>
+    </div>
+  </header>
+
+  <main class="py-6 max-w-[80ch] m-auto px-4 flex flex-col gap-4">
+    <section>
+      <h2 class="text-2xl font-bold flex flex-row gap-2 items-center mb-2">
+        <StarIcon className="text-blue-800" size={32} />
+        Tus paradas favoritas
+      </h2>
+      <StarredStops client:load />
+    </section>
+  </main>
+</Layout>
