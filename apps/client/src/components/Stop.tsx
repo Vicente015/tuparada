@@ -1,7 +1,7 @@
 import type { inferRouterOutputs } from '@trpc/server'
 import { useEffect, useMemo, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
-import type { AppRouter } from 'server/src/routers/_app'
+import type { AppRouter } from '@tuparada/server/src/routers/_app'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { trpc } from '../utils/trpc'
 type IncomingBusType = inferRouterOutputs<AppRouter>['paradas']['get']['lines'][number]

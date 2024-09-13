@@ -1,5 +1,5 @@
+import stops from '@tuparada/server/src/data/paradas.json'
 import { StarOffIcon } from 'lucide-react'
-import stops from 'server/src/data/paradas.json'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { formatStopName } from '../utils/formatStopName'
 

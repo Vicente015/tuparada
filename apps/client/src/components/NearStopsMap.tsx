@@ -1,12 +1,12 @@
 import 'leaflet/dist/leaflet.css'
 import 'react-loading-skeleton/dist/skeleton.css'
+import stops from '@tuparada/server/src/data/paradas.json'
 import { getLatitude, getLongitude } from 'geolib'
 import type { GeolibInputCoordinates } from 'geolib/es/types'
 import { Bounds, Icon, latLng, latLngBounds, rectangle } from 'leaflet'
 import { type DependencyList, useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import Skeleton from 'react-loading-skeleton'
-import stops from '../../../server/src/data/paradas.json'
 import { getMapData } from '../hooks/getMapData'
 import LocationButton from './LocationButton'
 
@@ -163,7 +163,7 @@ const Map: React.FC = () => {
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tiles.maps.jwestman.net/data/streets_v3/{z}/{x}/{y}.pbf"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
       {Zoom >= 13 ? <MyMarkers data={loadedStops == undefined ? defaultData : loadedStops} /> : null }
