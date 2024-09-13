@@ -163,7 +163,7 @@ const Map: React.FC = () => {
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://tiles.maps.jwestman.net/data/streets_v3/{z}/{x}/{y}.pbf"
       />
 
       {Zoom >= 13 ? <MyMarkers data={loadedStops == undefined ? defaultData : loadedStops} /> : null }

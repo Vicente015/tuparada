@@ -5,8 +5,8 @@ import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import stops from '../../../server/src/data/paradas.json'
 import { getMapData } from '../hooks/getMapData'
-import { formatStopName } from '../utils/formatStopName'
 import { resolveAcronyms } from '../utils/acronymResolver'
+import { formatStopName } from '../utils/formatStopName'
 
 const coordinates = stops
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)

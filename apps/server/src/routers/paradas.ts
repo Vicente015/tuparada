@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import got from 'got'
 import { z } from 'zod'
-import stops from '../data/paradas.json' assert { type: 'json' }
+import stops from '../data/paradas.json' with { type: 'json' }
 import { publicProcedure, router } from '../trpc.js'
 import getRouteColor from '../utils/getRouteColor.js'
 const cache = new Map()
