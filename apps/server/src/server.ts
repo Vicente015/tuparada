@@ -1,5 +1,6 @@
 import { fastifyCaching } from '@fastify/caching'
 import cors from '@fastify/cors'
+import helmet from '@fastify/helmet'
 import {
   fastifyTRPCPlugin,
   type FastifyTRPCPluginOptions
@@ -30,8 +31,14 @@ const server = fastify({
   logger: envToLogger[env.NODE_ENV] ?? true
 })
 
+// ? Helmet, https://github.com/fastify/fastify-helmet
+await server.register(helmet, {
+  global: true
+})
+
+// ? CORS
 await server.register(cors, {
-  origin: isProd ? 'https://tuparada.vicente015.dev' : 'http://localhost:3000'
+  origin: isProd ? 'https://tuparada.vicente015.dev' : 'http://localhost:4000'
 })
 await server.register(fastifyCaching,
   {
