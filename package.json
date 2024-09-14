@@ -8,7 +8,8 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint --fix --format=pretty --ext .js,.astro,.ts,.tsx,.jsx,.cjs ."
+    "lint:fix": "eslint --fix --format=pretty --ext .js,.astro,.ts,.tsx,.jsx,.cjs .",
+    "dev": "pnpm run --recursive --parallel dev"
   },
   "engines": {
     "node": "^22",
