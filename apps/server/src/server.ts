@@ -7,8 +7,8 @@ import {
 import fastify from 'fastify'
 import { renderTrpcPanel } from 'trpc-panel'
 import { createContext } from './context.js'
-import { appRouter, type AppRouter } from './routers/_app.js'
 import env from './env.js'
+import { appRouter, type AppRouter } from './routers/_app.js'
 
 const isProd = env.NODE_ENV === 'production'
 const envToLogger = {
@@ -71,7 +71,7 @@ server.route({
 
 try {
   await server.listen({ port: 3000, host: '0.0.0.0' })
-  console.debug('Listening on port 0.0.0.0:3000')
+  console.debug('Listening on port 3000')
 } catch (err) {
   server.log.error(err)
   process.exit(1)
