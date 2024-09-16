@@ -9,6 +9,10 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "engines": {
+    "pnpm": "latest",
+    "node": "18"
+  },
   "dependencies": {
     "@ariakit/react": "^0.4.1",
     "@astrojs/check": "^0.5.4",
