@@ -11,8 +11,9 @@
   },
   "engines": {
     "pnpm": "latest",
-    "node": "18"
+    "node": "^18"
   },
+  "packageManager": "pnpm@latest",
   "dependencies": {
     "@ariakit/react": "^0.4.1",
     "@astrojs/check": "^0.5.4",
