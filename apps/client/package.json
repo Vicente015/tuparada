@@ -10,7 +10,7 @@
     "astro": "astro"
   },
   "engines": {
-    "pnpm": "latest",
+    "pnpm": "^8",
     "node": "^18"
   },
   "packageManager": "pnpm@latest",
