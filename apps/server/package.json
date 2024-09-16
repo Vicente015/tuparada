@@ -9,6 +9,11 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "pnpm": "^8",
+    "node": "^18"
+  },
+  "packageManager": "pnpm@latest",
   "scripts": {
     "build": "tsc -b",
     "start:prod": "NODE_ENV=production node --env-file=.env dist/src/server.js",
