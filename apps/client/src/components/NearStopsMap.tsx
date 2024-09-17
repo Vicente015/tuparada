@@ -2,11 +2,12 @@ import 'leaflet/dist/leaflet.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { getLatitude, getLongitude } from 'geolib'
 import type { GeolibInputCoordinates } from 'geolib/es/types'
-import { Bounds, Icon, latLng, latLngBounds, rectangle } from 'leaflet'
+import { Bounds, Icon, latLng, latLngBounds } from 'leaflet'
 import { type DependencyList, useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import Skeleton from 'react-loading-skeleton'
 import stops from '../../../server/src/data/paradas.json'
+import stopsGlobal from '../../../server/src/data/paradasGlobal.json'
 import { getMapData } from '../hooks/getMapData'
 import LocationButton from './LocationButton'
 
@@ -18,12 +19,28 @@ const coordinates = stops
     longitude: parseFloat(item.longitude ?? '0')
   }))
 
+const globalCoordinates = stopsGlobal.kml.Document.Placemark.map((item: any) => {
+  const [longitude, latitude] = item.Point.coordinates.split(',').map(parseFloat)
+  return {
+    id: item.name.b,
+    name: item.name.b,
+    latitude,
+    longitude
+  }
+})
+
 const Map: React.FC = () => {
   const { mapData, numClick, openMap, setMapState, userCoords } = getMapData()
   const [Zoom, setZoomHook] = useState(15)
-  const [loadedStops, setLoadedStops] = useState<any[]>() // change any to type
+  const [loadedStops, setLoadedStops] = useState<any[]>()
   const [loading, setLoading] = useState(true)
   const [centerUser, setCenterUser] = useState(false)
+  const [showGlobalStops, setShowGlobalStops] = useState(false)
+
+  const toggleStops = () => {
+    setShowGlobalStops(prev => !prev)
+  }
+
   const defaultData = [{ id: '000', latitude: 0, longitude: 0, name: 'DONT LOOK HERE' }]
 
   const PointMarker = ({ center, icon, id, name }: any) => {
@@ -61,6 +78,18 @@ const Map: React.FC = () => {
     ))
   }
 
+  const GlobalMarkers = ({ data }: any) => {
+    return data.map((item: any, index: any) => (
+      <PointMarker
+        key={index}
+        name={item.name}
+        id={item.id}
+        center={{ lat: item.latitude, lng: item.longitude }}
+        icon={globalStopIcon}
+      />
+    ))
+  }
+
   const UserMarker = ({ coords }: any) => {
     return (
       <PointMarker
@@ -75,7 +104,7 @@ const Map: React.FC = () => {
     let stopsInView: Array<{ latitude: number, longitude: number, id: string, name: string }> = []
 
     useMapEvents({
-      zoomend () { // zoom event (when zoom animation ended)
+      zoomend() { // zoom event (when zoom animation ended)
         const zoom = map.getZoom() // get current Zoom of map
         const bounds = map.getBounds()
         stopsInView = []
@@ -88,7 +117,7 @@ const Map: React.FC = () => {
         }
         updateLoadedStops(stopsInView)
       },
-      dragend () {
+      dragend() {
         const bounds = map.getBounds()
         stopsInView = []
 
@@ -97,7 +126,6 @@ const Map: React.FC = () => {
             stopsInView.push(item)
           }
         }
-
         updateLoadedStops(stopsInView)
       }
     })
@@ -139,6 +167,10 @@ const Map: React.FC = () => {
     iconUrl: '/bus-stop.svg',
     iconSize: [19, 20]
   })
+  const globalStopIcon = new Icon({
+    iconUrl: '/bus-stop_global.svg',
+    iconSize: [19, 20]
+  })
   const errorIcon = new Icon({
     iconUrl: '/error-icon.svg',
     iconSize: [19, 20]
@@ -147,34 +179,48 @@ const Map: React.FC = () => {
   if (loading) { // ( ͡° ͜ʖ ͡°)
     return (
       <div className=' flex-1' style={{ width: '100%', height: '50vh' }}>
-      <Skeleton height={'50vh'} />
+        <Skeleton height={'50vh'} />
       </div>
     )
   }
 
   return (
     <>
-    <section>
-    <MapContainer
-    style={{ width: '100%', height: '55vh', zIndex: 0 }}
-    center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}
-    zoom={13}
-    scrollWheelZoom={true}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
 
-      {Zoom >= 13 ? <MyMarkers data={loadedStops == undefined ? defaultData : loadedStops} /> : null }
-      <GetMapData/>
-      <UserMarker coords={userCoords}/>
+      {/* Esto esta puesto de prueba, para debugar. */}
 
-    </MapContainer>
-    </section>
-    <section className='absolute right-5 bottom-10'>
-      <LocationButton/>
-    </section>
+      <button
+        onClick={toggleStops}
+        className={`toggle-button px-4 py-2 mt-4 text-white font-semibold rounded-full shadow-md transition-all duration-300
+            ${showGlobalStops ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-blue-500 hover:bg-blue-600'}`}
+      >
+        {showGlobalStops ? 'Ver paradas locales' : 'Ver paradas globales'}
+      </button>
+
+      <section>
+        <MapContainer
+          style={{ width: '100%', height: '55vh', zIndex: 0 }}
+          center={[getLatitude(userCoords!) == 0 ? '28.126' : getLatitude(userCoords!), getLongitude(userCoords!) == 0 ? '-15.438' : getLongitude(userCoords!)]}
+          zoom={13}
+          scrollWheelZoom={true}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {Zoom >= 13 ? (
+            <>
+              <MyMarkers data={loadedStops == undefined ? defaultData : loadedStops} />
+              {showGlobalStops && <GlobalMarkers data={globalCoordinates} />} {/* Mostrar las paradas globales */}
+            </>
+          ) : null}
+          <GetMapData />
+          <UserMarker coords={userCoords} />
+        </MapContainer>
+      </section>
+      <section className='absolute right-5 bottom-10'>
+        <LocationButton />
+      </section>
     </>
   )
 }
