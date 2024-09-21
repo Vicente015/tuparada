@@ -16,7 +16,7 @@
   },
   "packageManager": "pnpm@latest",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && copyfiles -u 1 src/data/transit/**/* dist/src/data/transit",
     "start": "node dist/src/server.js",
     "start:prod": "NODE_ENV=production node --env-file=.env dist/src/server.js",
     "start:dev": "NODE_ENV=development node --env-file=.env dist/src/server.js",
@@ -39,6 +39,10 @@
     "@tsconfig/strictest": "^2.0.3",
     "@types/got": "^9.6.12",
     "@types/node": "^20.11.24",
+    "copyfiles": "^2.4.1",
     "esbuild": "^0.20.1"
+  },
+  "volta": {
+    "node": "18.20.4"
   }
 }

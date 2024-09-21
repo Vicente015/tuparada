@@ -5,7 +5,8 @@
   ],
   "include": [
     "src",
-    "src/data/paradas.json"
+    "src/data/paradas.json",
+    "src/data/transit"
   ],
   "typeRoots": [
     "./node_modules/@types",
