@@ -3367,6 +3367,12 @@
   },
   {
     "id": "579",
+    "name": "PLAZA DE LA CONSTITUCIÓN (OBELISCO)",
+    "latitude": "28.15321039",
+    "longitude": "-15.41446462"
+  },
+  {
+    "id": "579",
     "name": "Av de las Petroliferas Depositos Comerciales",
     "latitude": "28.15321039",
     "longitude": "-15.41446462"
@@ -3576,8 +3582,8 @@
   {
     "id": "615",
     "name": "HOSPITAL JUAN CARLOS I",
-    "latitude": "28.10316880",
-    "longitude": "-15.42295140"
+    "latitude": "28.10214904",
+    "longitude": "-15.42286773"
   },
   {
     "id": "616",
@@ -3599,7 +3605,9 @@
   },
   {
     "id": "619",
-    "name": "HOSPITAL JUAN CARLOS I (REHABILITACIÓN)"
+    "name": "HOSPITAL JUAN CARLOS I (REHABILITACIÓN)",
+    "latitude": "28.08821273",
+    "longitude": "-15.45921457"
   },
   {
     "id": "620",
@@ -3843,9 +3851,7 @@
   },
   {
     "id": "667",
-    "name": "C/ REAL DEL CASTILLO",
-    "latitude": "28.10507177",
-    "longitude": "-15.42317683"
+    "name": "C/ REAL DEL CASTILLO"
   },
   {
     "id": "668",
@@ -3855,9 +3861,7 @@
   },
   {
     "id": "669",
-    "name": "C/ REAL DEL CASTILLO (SAN NICOLÁS)",
-    "latitude": "28.10382478",
-    "longitude": "-15.42176541"
+    "name": "C/ REAL DEL CASTILLO (SAN NICOLÁS)"
   },
   {
     "id": "670",
@@ -3867,9 +3871,7 @@
   },
   {
     "id": "671",
-    "name": "C/ SIERRA NEVADA, FRENTE  44",
-    "latitude": "28.10242712",
-    "longitude": "-15.42089463"
+    "name": "C/ SIERRA NEVADA, FRENTE  44"
   },
   {
     "id": "672",
@@ -3975,9 +3977,7 @@
   },
   {
     "id": "689",
-    "name": "BERNARDINO CORREA VIERA,  FRENTE 13",
-    "latitude": "28.10111588",
-    "longitude": "-15.41883153"
+    "name": "BERNARDINO CORREA VIERA,  FRENTE 13"
   },
   {
     "id": "690",
@@ -4101,9 +4101,7 @@
   },
   {
     "id": "713",
-    "name": "C/ GAVILAN (RESIDENCIAL LOS GRANJEROS)",
-    "latitude": "28.07587887",
-    "longitude": "-15.41943195"
+    "name": "C/ GAVILAN (RESIDENCIAL LOS GRANJEROS)"
   },
   {
     "id": "714",
@@ -4585,9 +4583,11 @@
   },
   {
     "id": "892",
-    "name": "C/ SALAMANCA, 171 (PEDRO HIDALGO)",
-    "latitude": "28.06737105",
-    "longitude": "-15.42912693"
+    "name": "C/ SALAMANCA, 171 (PEDRO HIDALGO)"
+  },
+  {
+    "id": "892",
+    "name": "C/ SALAMANCA, 171 (PEDRO HIDALGO)"
   },
   {
     "id": "893",
@@ -4608,8 +4608,8 @@
   {
     "id": "897",
     "name": "C/ SIERRA NEVADA (SAN FRANCISCO)",
-    "latitude": "28.10212515",
-    "longitude": "-15.42249728"
+    "latitude": "28.10316880",
+    "longitude": "-15.42295140"
   },
   {
     "id": "898",
@@ -4917,7 +4917,9 @@
   },
   {
     "id": "976",
-    "name": "TEATRO"
+    "name": "TEATRO",
+    "latitude": "28.10383060",
+    "longitude": "-15.41371479"
   },
   {
     "id": "977",
@@ -4992,8 +4994,8 @@
   {
     "id": "989",
     "name": "C/ SIERRA NEVADA (SAN FRANCISCO)",
-    "latitude": "28.10212515",
-    "longitude": "-15.42249728"
+    "latitude": "28.10316880",
+    "longitude": "-15.42295140"
   },
   {
     "id": "990",

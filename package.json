@@ -13,6 +13,11 @@
     "build:server": "pnpm --filter ./apps/server/ run build",
     "start:server": "pnpm --filter ./apps/server/ run start"
   },
+  "engines": {
+    "pnpm": "^9",
+    "node": "^20"
+  },
+  "packageManager": "pnpm@latest",
   "dependencies": {
     "geolib": "^3.3.4",
     "jsdom": "^24.0.0",
@@ -34,5 +39,8 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-sort": "^2.11.0",
     "typescript": "^5.3.3"
+  },
+  "volta": {
+    "node": "^20"
   }
 }

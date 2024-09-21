@@ -11,12 +11,12 @@
     "dist"
   ],
   "engines": {
-    "pnpm": "^8",
-    "node": "^18"
+    "pnpm": "^9",
+    "node": "^20"
   },
   "packageManager": "pnpm@latest",
   "scripts": {
-    "build": "tsc -b && copyfiles -u 1 src/data/transit/**/* dist/src/data/transit",
+    "build": "tsc -b && copyfiles src/data/transit/*.csv dist/",
     "start": "node dist/src/server.js",
     "start:prod": "NODE_ENV=production node --env-file=.env dist/src/server.js",
     "start:dev": "NODE_ENV=development node --env-file=.env dist/src/server.js",
@@ -41,8 +41,5 @@
     "@types/node": "^20.11.24",
     "copyfiles": "^2.4.1",
     "esbuild": "^0.20.1"
-  },
-  "volta": {
-    "node": "18.20.4"
   }
 }

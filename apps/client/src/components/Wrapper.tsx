@@ -3,7 +3,7 @@ import { httpBatchLink } from '@trpc/client'
 import { type PropsWithChildren, useState } from 'react'
 import { trpc } from '../utils/trpc'
 
-const isProd = import.meta.env.PROD;
+const isProd = import.meta.env.PROD
 
 const Wrapper: React.FC<PropsWithChildren> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient())
@@ -11,7 +11,7 @@ const Wrapper: React.FC<PropsWithChildren> = ({ children }) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: (isProd ? 'https://apituparada.vicente015.dev' : 'http://localhost:4321') + '/trpc',
+          url: (isProd ? 'https://apituparada.vicente015.dev' : 'http://localhost:3000') + '/trpc'
         })
       ]
     })
