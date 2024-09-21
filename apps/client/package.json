@@ -13,7 +13,7 @@
     "pnpm": "^9",
     "node": "^20"
   },
-  "packageManager": "pnpm@latest",
+  "packageManager": "pnpm@9",
   "dependencies": {
     "@ariakit/react": "^0.4.1",
     "@astrojs/check": "^0.5.4",
