@@ -17,7 +17,7 @@
     "pnpm": "^9",
     "node": "^20"
   },
-  "packageManager": "pnpm@9",
+  "packageManager": "pnpm@^9",
   "dependencies": {
     "geolib": "^3.3.4",
     "jsdom": "^24.0.0",

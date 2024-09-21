@@ -14,7 +14,7 @@
     "pnpm": "^9",
     "node": "^20"
   },
-  "packageManager": "pnpm@9",
+  "packageManager": "pnpm@^9",
   "scripts": {
     "build": "tsc -b && copyfiles src/data/transit/*.csv dist/",
     "start": "node dist/src/server.js",
