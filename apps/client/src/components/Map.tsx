@@ -1,10 +1,10 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
+import stopsJSON from '@tuparada/server/src/data/paradas.json'
 import maplibregl, { type LngLatBoundsLike } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
+import layers from 'protomaps-themes-base'
 import { useEffect, useMemo } from 'react'
 import { Map as MapGL, Marker } from 'react-map-gl'
-import layers from 'protomaps-themes-base'
-import stopsJSON from '../../../server/src/data/paradas.json'
 
 const stops = stopsJSON
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)

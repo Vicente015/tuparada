@@ -8,7 +8,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint --fix --format=pretty --ext .js,.astro,.ts,.tsx,.jsx,.cjs .",
+    "fix": "eslint --fix --format=pretty --ext .js,.astro,.ts,.tsx,.jsx,.cjs .",
     "dev": "pnpm run --recursive --parallel dev"
   },
   "engines": {
@@ -17,9 +17,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^20.11.17",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-formatter-pretty": "^5.0.0",
     "eslint-plugin-astro": "^0.31.4",

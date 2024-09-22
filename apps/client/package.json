@@ -30,6 +30,7 @@
     "protomaps-themes-base": "^3.1.0",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-leaflet": "^4.2.1",
     "react-loading-skeleton": "^3.4.0",
     "react-map-gl": "^7.1.7",
     "react-maplibre-gl": "^1.0.8",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.5.1",
+    "@types/leaflet": "^1.9.12",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:"
