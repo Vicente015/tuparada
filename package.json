@@ -13,11 +13,13 @@
   },
   "engines": {
     "node": "^22",
-    "pnpm": "^9",
-    "typescript": "5.6.x"
+    "pnpm": "^9"
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-formatter-pretty": "^5.0.0",
     "eslint-plugin-astro": "^0.31.4",
