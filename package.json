@@ -9,12 +9,16 @@
   "scripts": {
     "lint": "eslint .",
     "fix": "eslint --fix --format=pretty --ext .js,.astro,.ts,.tsx,.jsx,.cjs .",
-    "dev": "pnpm run --recursive --parallel dev"
+    "dev": "pnpm run --recursive --parallel dev",
+    "start:server": "pnpm --filter ./apps/server/ run start",
+    "build:client": "pnpm --filter ./apps/client/ run build",
+    "build:server": "pnpm --filter ./apps/server/ run build"
   },
   "engines": {
-    "node": "^22",
-    "pnpm": "^9"
+    "node": "20",
+    "pnpm": "9"
   },
+  "packageManager": "pnpm@9.11.0",
   "dependencies": {},
   "devDependencies": {
     "eslint-config-standard-with-typescript": "^43.0.1",

@@ -1,5 +1,10 @@
 import { parse } from 'csv-parse/sync'
 import { readFileSync } from 'fs'
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 interface Route {
   route_id: string
@@ -15,8 +20,9 @@ interface Route {
 type Routes = Route[]
 
 export default function getRouteColor (code: string) {
+  const routesPath = path.resolve(__dirname, '../data/transit/routes.csv')
   const routesCSV = parse(
-    readFileSync('src/data/transit/routes.csv'),
+    readFileSync(routesPath),
     { columns: true, skip_empty_lines: true }
   ) as Routes
   // eslint-disable-next-line @typescript-eslint/naming-convention

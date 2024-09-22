@@ -6,11 +6,18 @@
   "license": "MIT",
   "author": "",
   "type": "module",
+  "main": "dist/src/server.js",
   "files": [
     "dist"
   ],
+  "engines": {
+    "pnpm": "9",
+    "node": "20"
+  },
+  "packageManager": "pnpm@9.11.0",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && copyfiles src/data/transit/*.csv dist/",
+    "start": "node dist/src/server.js",
     "start:prod": "NODE_ENV=production node --env-file=.env dist/src/server.js",
     "start:dev": "NODE_ENV=development node --env-file=.env dist/src/server.js",
     "prod": "pnpm run build && pnpm run start:prod",
@@ -33,6 +40,7 @@
     "@tsconfig/strictest": "^2.0.5",
     "@types/got": "^9.6.12",
     "@types/node": "catalog:",
+    "copyfiles": "^2.4.1",
     "esbuild": "^0.20.2"
   }
 }
