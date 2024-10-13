@@ -1,12 +1,12 @@
 import { fastifyCaching } from '@fastify/caching'
 import cors from '@fastify/cors'
+import helmet from '@fastify/helmet'
 import {
   fastifyTRPCPlugin,
   type FastifyTRPCPluginOptions
 } from '@trpc/server/adapters/fastify'
 import fastify from 'fastify'
 import { renderTrpcPanel } from 'trpc-panel'
-import helmet from '@fastify/helmet'
 import { createContext } from './context.js'
 import env from './env.js'
 import { appRouter, type AppRouter } from './routers/_app.js'

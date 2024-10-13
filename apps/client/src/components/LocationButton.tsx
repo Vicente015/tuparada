@@ -3,7 +3,7 @@ import { MapPinned } from 'lucide-react'
 import { getMapData } from '../hooks/getMapData'
 
 const LocationButton: React.FC = () => {
-  const { addClick, addStops, addUserCoords, mapData, numClick, setMapState } = getMapData()
+  const { addClick, addUserCoords } = getMapData()
 
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition(

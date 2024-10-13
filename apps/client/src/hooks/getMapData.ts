@@ -1,5 +1,4 @@
 import type { GeolibInputCoordinates } from 'geolib/es/types'
-import { useState } from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 
 export function getMapData () {
@@ -38,6 +37,5 @@ export function getMapData () {
     addStops,
     addUserCoords,
     addClick
-
   }
 }
