@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@tsconfig/node-lts/tsconfig.json",
+    "@tsconfig/node22/tsconfig.json",
     "../../tsconfig.json"
   ],
   "include": [
@@ -15,6 +15,10 @@
   "compilerOptions": {
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
+    "lib": [
+      "ESNext"
+    ],
+    "target": "ESNext",
     "composite": true,
     "outDir": "dist",
     "allowJs": true

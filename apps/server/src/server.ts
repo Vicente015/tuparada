@@ -48,6 +48,9 @@ await server.register(fastifyCaching,
   }
 )
 
+// todo: Add middleware to check env variable
+// https://github.com/fastify/middie
+
 /**
  * Implementación del servidor HTTP
  * - https://trpc.io/docs/server/adapters/fastify
