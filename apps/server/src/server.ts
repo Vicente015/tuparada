@@ -7,8 +7,9 @@ import {
 import fastify from 'fastify'
 import { renderTrpcPanel } from 'trpc-panel'
 import { createContext } from './context.js'
-import { appRouter, type AppRouter } from './routers/_app.js'
 import env from './env.js'
+import { appRouter, type AppRouter } from './routers/_app.js'
+import genStopLines from './utils/genStopLines.js'
 
 const isProd = env.NODE_ENV === 'production'
 const envToLogger = {
@@ -67,6 +68,13 @@ server.route({
   },
   method: 'GET',
   url: '/panel'
+})
+
+/**
+ * On Ready event listener
+ */
+server.addHook('onReady', () => {
+  genStopLines()
 })
 
 try {

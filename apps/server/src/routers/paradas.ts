@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import got from 'got'
 import { z } from 'zod'
 import stops from '../data/paradas.json' assert { type: 'json' }
+import { StopLines } from '../store/StopLines.js'
 import { publicProcedure, router } from '../trpc.js'
 import getRouteColor from '../utils/getRouteColor.js'
 const cache = new Map()
@@ -16,6 +17,10 @@ const OutputSchema = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   lines: z.array(z.object({
+    name: z.string(),
+    color: z.string().optional()
+  })).or(z.undefined()),
+  upcomingLines: z.array(z.object({
     destination: z.string(),
     arrival_time: z.string(),
     number: z.string(),
@@ -65,7 +70,11 @@ export const paradasRouter = router({
           name: outputData.nombre,
           latitude: stopDataFromJSON?.latitude != null ? parseFloat(stopDataFromJSON?.latitude) : undefined,
           longitude: stopDataFromJSON?.longitude != null ? parseFloat(stopDataFromJSON?.longitude) : undefined,
-          lines: outputData.lineas.map(({ destino, llegada, numero }) => ({
+          lines: StopLines.get(input.id)?.map((lineId) => ({
+            name: lineId,
+            color: getRouteColor(lineId)
+          })),
+          upcomingLines: outputData.lineas.map(({ destino, llegada, numero }) => ({
             color: getRouteColor(numero),
             arrival_time: llegada,
             destination: destino,
