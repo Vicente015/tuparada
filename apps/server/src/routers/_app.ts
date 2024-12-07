@@ -5,7 +5,8 @@ import { paradasRouter } from './paradas.js'
  * Definition of the routes and routers
  */
 const appRouter = router({
-  paradas: paradasRouter
+  paradas: paradasRouter,
+  paradasGlobal: paradasRouter
 })
 
 export { appRouter }
