@@ -1,0 +1,8 @@
+{
+    "eslint.enable": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "prettier.enable": false,
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+}
