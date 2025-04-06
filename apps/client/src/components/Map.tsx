@@ -7,6 +7,7 @@ import { Protocol } from 'pmtiles'
 import layers from 'protomaps-themes-base'
 import { useEffect, useMemo, useState } from 'react'
 import { Map as MapGL, Marker, type ViewStateChangeEvent } from 'react-map-gl'
+import StopPopup from './StopPopup'
 
 const stops = stopsJSON
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)
@@ -18,7 +19,8 @@ const stops = stopsJSON
 
 export default function Map () {
   const [filteredStops, setFilteredStops] = useState<typeof stops>([])
-  const [showPopup, setShowPopup] = useState<boolean>(false)
+  const [activeStop, setActiveStop] = useState<number | null>(null)
+
 
   useEffect(() => {
     const protocol = new Protocol()
@@ -51,7 +53,7 @@ export default function Map () {
         <button
           className="flex flex-row gap-1 justify-start size-6"
           onClick={() => {
-            setShowPopup(true)
+            setActiveStop(parseInt(stop.id))
           }}
         >
           <svg
@@ -146,55 +148,8 @@ export default function Map () {
     >
       {markers}
 
-      {showPopup && (
-        <div className="absolute bottom-32 left-4 right-4 z-10 bg-white rounded-lg shadow-lg p-4 max-h-[50vh] overflow-y-auto">
-          <div className="flex flex-row justify-between items-center mb-4">
-            <h2 className="text-base font-semibold">C.C Las Arenas</h2>
-            <div className="flex gap-2 justify-end">
-              <button className="p-1 hover:bg-gray-100 rounded-full">
-                <Star fill="yellow" size={15} />
-              </button>
-              <button className="p-1 hover:bg-gray-100 rounded-full">
-                <Menu size={15} />
-              </button>
-            </div>
-          </div>
-
-          {/* // TODO: Separar componente  */}
-
-          <section className="flex flex-row gap-2">
-            {/* Lineas ... */}
-            <div className="w-5 h-5 bg-yellow-300 rounded flex items-center justify-center text-white text-xs">
-              1
-            </div>
-            <div className="w-5 h-5 bg-blue-400 rounded flex items-center justify-center text-white text-xs">
-              12
-            </div>
-            <div className="w-5 h-5 bg-yellow-300 rounded flex items-center justify-center text-white text-xs">
-              25
-            </div>
-          </section>
-
-          <div className="w-full h-px bg-gray-200 my-4"></div>
-
-          <section className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-gray-500 pb-2">Ruta</p>
-                <div className="flex flex-row items-center gap-2">
-                  <div className="w-5 h-5 bg-yellow-300 rounded flex items-center justify-center text-white text-xs">
-                    12
-                  </div>
-                  <p className="text-sm text-gray-500">El puerto</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-500 pb-2">Llegada en</p>
-                <p className="font-medium text-green-600">5 min</p>
-              </div>
-            </div>
-          </section>
-        </div>
+      {activeStop && (
+        <StopPopup id={activeStop}/>
       )}
     </MapGL>
   )
