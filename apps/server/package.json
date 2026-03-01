@@ -11,10 +11,10 @@
     "dist"
   ],
   "engines": {
-    "pnpm": "9",
-    "node": "22"
+    "pnpm": "10",
+    "node": "24"
   },
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@10.30.3",
   "scripts": {
     "build": "tsc -b && copyfiles src/data/transit/*.csv dist/",
     "start": "node dist/src/server.js",
@@ -37,7 +37,7 @@
     "zod": "^3.22.5"
   },
   "devDependencies": {
-    "@tsconfig/node22": "catalog:",
+    "@tsconfig/node24": "catalog:",
     "@tsconfig/strictest": "^2.0.8",
     "@types/got": "^9.6.12",
     "@types/node": "catalog:",
@@ -45,6 +45,6 @@
     "esbuild": "^0.20.2"
   },
   "volta": {
-    "node": "22.10.0"
+    "node": "24.14.0"
   }
 }
