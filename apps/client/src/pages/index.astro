@@ -1,6 +1,6 @@
 ---
 import { HistoryIcon, StarIcon } from 'lucide-react'
-import Map from '../components/Map.jsx'
+import HomeWrapper from '../components/HomeWrapper.jsx'
 import RecentStops from '../components/RecentStops.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import Layout from '../layouts/Layout.astro';
@@ -8,15 +8,13 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Tu Parada" className="bg-neutral-100">
   <header class="flex flex-col font-serif w-full pt-8 bg-blue-600 text-white">
-
       <h1 class="font-bold text-3xl text-center">Tu Parada</h1>
       <p class="text-xl text-balance text-center mt-2">
         Guarda un acceso directo a tu parada y consúltalo de forma rápida y sencilla!
       </p>
-    </div>
     <div class="relative min-h-40 pt-5">
-      <section class="-z-10">
-        <Map client:only />
+      <section class="-z-10" >
+       <HomeWrapper client:only={'react'}/>
       </section>
       <section class="absolute inset-x-0 top-0 drop-shadow-lg z-10 max-w-[80ch] m-auto flex flex-col items-center justify-center mt-12">
         <SearchBar client:load />

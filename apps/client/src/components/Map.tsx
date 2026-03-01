@@ -1,11 +1,18 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { layers, namedFlavor } from '@protomaps/basemaps'
 import stopsJSON from '@tuparada/server/src/data/paradas.json'
-import { getDistance } from 'geolib'
+import { useGeolocation } from '@uidotdev/usehooks'
+import type { FeatureCollection, LineString } from 'geojson'
 import maplibregl, { type LngLatBoundsLike } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
-import layers from 'protomaps-themes-base'
-import { useEffect, useMemo, useState } from 'react'
-import { Map as MapGL, Marker, type ViewStateChangeEvent } from 'react-map-gl'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Map as MapGL, type MapRef, Marker, type ViewStateChangeEvent } from 'react-map-gl'
+import { trpc } from '../utils/trpc'
+import CircleMunicipal from './icons/CircleMunicipal'
+import StopMunicipal from './icons/StopMunicipal'
+import LocationButton from './LocationButton'
+
+const MAX_BOUNDS: LngLatBoundsLike = [-15.882797, 27.723931, -15.315628, 28.195578]
 
 const stops = stopsJSON
   .filter((item) => item.latitude !== undefined && item.longitude !== undefined)
@@ -15,8 +22,41 @@ const stops = stopsJSON
     longitude: parseFloat(item.longitude ?? '0')
   }))
 
+function removeAllPOIs (baseLayers: maplibregl.LayerSpecification[]) {
+  return baseLayers.filter(layer =>
+    !layer.id?.includes('poi') &&
+    !layer.id?.includes('pois')
+  )
+}
+
 export default function Map () {
+  const theme: 'light' | 'dark' = 'light'
+  const mapRef = useRef<MapRef | null>(null)
   const [filteredStops, setFilteredStops] = useState<typeof stops>([])
+  const { data: linesData } = trpc.lineas.get.useQuery(undefined, {
+    cacheTime: 24 * 60 * 60 * 1000
+  })
+  const [zoom, setZoom] = useState(0)
+  const geolocation = useGeolocation()
+  const [showUserLocation, setShowUserLocation] = useState(false)
+
+  // Get base layers and apply filter
+  const baseLayers = layers('protomaps', namedFlavor('light'), { lang: 'es' })
+  const filteredLayers = removeAllPOIs(baseLayers)
+
+  const geojson: FeatureCollection<LineString> = useMemo(() => ({
+    type: 'FeatureCollection',
+    features: (linesData ?? []).map((line) => ({
+      id: 'lines-map-data-element',
+      type: 'Feature',
+      properties: { color: line.color, name: line.name },
+      geometry: {
+        type: 'LineString',
+        coordinates: line.coordinates
+      }
+    }))
+  }), [linesData])
+
   useEffect(() => {
     const protocol = new Protocol()
     maplibregl.addProtocol('pmtiles', protocol.tile)
@@ -25,71 +65,148 @@ export default function Map () {
     }
   }, [])
 
-  const theme: 'light' | 'dark' = 'light'
-  const maxBounds: LngLatBoundsLike = [-15.882797, 27.723931, -15.315628, 28.195578]
-  // todo: load svg inline
+  useEffect(() => {
+    const map = mapRef.current
+    if (map === null) return
+
+    map.once('load', (ev) => {
+
+    })
+  }, [mapRef.current])
 
   const markers = useMemo(() => {
+    const size = zoom < 14 ? 8 : Math.floor((zoom - 12) * 8)
+    console.debug('size', size)
     return filteredStops.map((stop) => (
-      <Marker key={stop.id} latitude={stop.latitude} longitude={stop.longitude} style={{
-        width: '20px',
-        height: '20px'
-      }}>
-        <a className='flex flex-row gap-1 justify-start' href={`/parada/${stop.id}`}>
-          <svg viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0" transform="translate(1.5600000000000005,1.5600000000000005), scale(0.87)"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="7.2" fill="#0097dc" strokeWidth="0"></rect></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fillRule="evenodd" clipRule="evenodd" d="M12 2C8.22876 2 6.34315 2 5.17157 3.17157C4.10848 4.23467 4.01004 5.8857 4.00093 9H3C2.44772 9 2 9.44772 2 10V11C2 11.3148 2.14819 11.6111 2.4 11.8L4 13C4.00911 16.1143 4.10848 17.7653 5.17157 18.8284C5.41375 19.0706 5.68645 19.2627 6 19.4151V20.9999C6 21.5522 6.44772 21.9999 7 21.9999H8.5C9.05228 21.9999 9.5 21.5522 9.5 20.9999V19.9815C10.2271 20 11.0542 20 12 20C12.9458 20 13.7729 20 14.5 19.9815V20.9999C14.5 21.5522 14.9477 21.9999 15.5 21.9999H17C17.5523 21.9999 18 21.5522 18 20.9999V19.4151C18.3136 19.2627 18.5862 19.0706 18.8284 18.8284C19.8915 17.7653 19.9909 16.1143 20 13L21.6 11.8C21.8518 11.6111 22 11.3148 22 11V10C22 9.44772 21.5523 9 21 9H19.9991C19.99 5.8857 19.8915 4.23467 18.8284 3.17157C17.6569 2 15.7712 2 12 2ZM5.5 9.5C5.5 10.9142 5.5 11.6213 5.93934 12.0607C6.37868 12.5 7.08579 12.5 8.5 12.5H12H15.5C16.9142 12.5 17.6213 12.5 18.0607 12.0607C18.5 11.6213 18.5 10.9142 18.5 9.5V7C18.5 5.58579 18.5 4.87868 18.0607 4.43934C17.6213 4 16.9142 4 15.5 4H12H8.5C7.08579 4 6.37868 4 5.93934 4.43934C5.5 4.87868 5.5 5.58579 5.5 7V9.5ZM6.25 16C6.25 15.5858 6.58579 15.25 7 15.25H8.5C8.91421 15.25 9.25 15.5858 9.25 16C9.25 16.4142 8.91421 16.75 8.5 16.75H7C6.58579 16.75 6.25 16.4142 6.25 16ZM17.75 16C17.75 15.5858 17.4142 15.25 17 15.25H15.5C15.0858 15.25 14.75 15.5858 14.75 16C14.75 16.4142 15.0858 16.75 15.5 16.75H17C17.4142 16.75 17.75 16.4142 17.75 16Z" fill="#ffffff"></path> </g></svg>
+      <Marker
+        key={stop.id}
+        latitude={stop.latitude}
+        longitude={stop.longitude}
+        anchor='bottom'
+      >
+        <a href={`/parada/${stop.id}`}>
+          {zoom < 14
+            ? <CircleMunicipal width={size} height={size} />
+            : <StopMunicipal width={size} height={size} />}
         </a>
-      </Marker>)
+      </Marker>
     )
-  }, [filteredStops])
+    )
+  }, [filteredStops, zoom])
+
+  useEffect(() => {
+    if (showUserLocation && !geolocation.loading && geolocation.latitude != null && geolocation.longitude != null) {
+      mapRef.current?.flyTo({ center: [geolocation.longitude, geolocation.latitude], zoom: 15 })
+    }
+  }, [showUserLocation, geolocation.loading, geolocation.latitude, geolocation.longitude])
+
+  const handleLocate = () => {
+    setShowUserLocation(true)
+    if (!geolocation.loading && geolocation.latitude != null && geolocation.longitude != null) {
+      mapRef.current?.flyTo({ center: [geolocation.longitude, geolocation.latitude], zoom: 15 })
+    }
+  }
 
   const handleZoom = (e: ViewStateChangeEvent) => {
-    const { latitude, longitude, zoom } = e.viewState
-    if (zoom < 12) {
+    const { zoom: newZoom } = e.viewState
+    console.debug('newZoom', newZoom)
+    setZoom(newZoom)
+    const bounds = mapRef.current?.getBounds()
+
+    if (newZoom < 12) {
       setFilteredStops([])
       return
     }
-    const maxDistanceInMeters = 9000 - (zoom * 500)
-    console.debug(zoom, maxDistanceInMeters)
 
     setFilteredStops(
-      stops.filter((stop) => {
-        const distance = getDistance(
-          { latitude, longitude },
-          { latitude: stop.latitude, longitude: stop.longitude }
-        )
-        return distance <= maxDistanceInMeters
-      })
+      stops.filter((stop) => bounds?.contains([stop.longitude, stop.latitude]))
     )
   }
 
   return (
-      <MapGL
+    <div style={{ position: 'relative', width: '100%' }}>
+    <MapGL
+      ref={mapRef}
       style={{ width: '100%', height: 600 }}
       cooperativeGestures={false}
       onDragEnd={handleZoom}
       onZoomEnd={handleZoom}
-      maxBounds={maxBounds}
-        mapStyle={{
-          version: 8,
-          glyphs:
-            'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
-          sprite: `https://protomaps.github.io/basemaps-assets/sprites/v3/${theme}`,
-          sources: {
-            protomaps: {
-              type: 'vector',
-              url: 'https://mapa.vicente015.dev/grancanaria.json'
+      maxBounds={MAX_BOUNDS}
+      mapStyle={{
+        version: 8,
+        glyphs:
+          'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+        sprite: `https://protomaps.github.io/basemaps-assets/sprites/v4/${theme}`,
+        sources: {
+          protomaps: {
+            type: 'vector',
+            url: 'https://mapa.vicente015.dev/grancanaria.json'
+          }
+          /*           lines: {
+            type: 'geojson',
+            data: geojson
+          } */
+        },
+        transition: {
+          duration: 0
+        },
+        layers: [
+          ...filteredLayers
+          /*           {
+            id: 'lines-fill',
+            type: 'line',
+            source: 'lines',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': 'white', // Red color
+              'line-width': 6, // Width of the line
+              'line-opacity': 1 // Full opacity
             }
           },
-          transition: {
-            duration: 0
-          },
-          // @ts-expect-error wrong lib type
-          layers: layers('protomaps', theme)
-        }}
-        // @ts-expect-error wrong lib type
-        mapLib={maplibregl}
+          {
+            id: 'lines-outline',
+            type: 'line',
+            source: 'lines',
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round'
+            },
+            paint: {
+              'line-color': ['get', 'color'], // White color for outline
+              'line-width': 2 // Slightly thicker for outline
+            }
+          } */
+        ]
+      }}
+      // @ts-expect-error wrong lib type
+      mapLib={maplibregl}
     >
       {markers}
+      {showUserLocation && !geolocation.loading && geolocation.latitude != null && geolocation.longitude != null && (
+        <Marker
+          latitude={geolocation.latitude}
+          longitude={geolocation.longitude}
+          anchor='center'
+        >
+          <div
+            style={{
+              width: 16,
+              height: 16,
+              borderRadius: '50%',
+              backgroundColor: '#4285F4',
+              border: '3px solid white',
+              boxShadow: '0 0 6px rgba(66,133,244,0.5)'
+            }}
+          />
+        </Marker>
+      )}
     </MapGL>
+    <div className="fixed bottom-4 right-4 z-10 md:absolute md:bottom-4 md:right-4">
+      <LocationButton onLocate={handleLocate} />
+    </div>
+    </div>
   )
 }

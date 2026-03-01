@@ -21,9 +21,9 @@ route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_
 35,Guaguas,35,Auditorio - La Ballena (por Las Torres),,3,https://www.guaguas.com/lineas/35,FFDD00,000000
 41,Guaguas,41,Santa Catalina - Las Coloradas,,3,https://www.guaguas.com/lineas/41,009EE0,FFFFFF
 44,Guaguas,44,Santa Catalina - Isla Perdida,,3,https://www.guaguas.com/lineas/44,009EE0,FFFFFF
-45,Guaguas,45,Santa Catalina - Hoya Andrea,,3,https://www.guaguas.com/lineas/45,009EE0,FFFFFF
+45,Guaguas,45,Auditorio - Hoya Andrea,,3,https://www.guaguas.com/lineas/45,FFDD00,000000
 46,Guaguas,46,Tamaraceite - Siete Palmas (por San Lorenzo),,3,https://www.guaguas.com/lineas/46,FFDD00,000000
-47,Guaguas,47,Puerto - Tamaraceite,,3,https://www.guaguas.com/lineas/47,009EE0,FFFFFF
+47,Guaguas,47,Auditorio - Tamaraceite (por Lomo Los Frailes),,3,https://www.guaguas.com/lineas/47,FFDD00,000000
 48,Guaguas,48,Escaleritas - Campus Universitario,,3,https://www.guaguas.com/lineas/48,FFDD00,000000
 50,Guaguas,50,Ciudad Deportiva Gran Canaria - Zárate,,3,https://www.guaguas.com/lineas/50,B966A1,FFFFFF
 51,Guaguas,51,Hoya de La Plata - Casablanca,,3,https://www.guaguas.com/lineas/51,B966A1,FFFFFF
@@ -37,9 +37,12 @@ route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_
 84,Guaguas,84,Teatro - Lomo de La Cruz (por San Francisco),,3,https://www.guaguas.com/lineas/84,009036,FFFFFF
 91,Guaguas,91,Teatro - Tamaraceite,,3,https://www.guaguas.com/lineas/91,009036,FFFFFF
 L1,Guaguas,L1,Puerto - Hoya de La Plata,,3,https://www.guaguas.com/lineas/L1,00396B,FFFFFF
-L2,Guaguas,L2,Teatro -Santa Catalina,,3,https://www.guaguas.com/lineas/L2,006ab3,FFFFFF
+L2,Guaguas,L2,Teatro - Santa Catalina,,3,https://www.guaguas.com/lineas/L2,006ab3,FFFFFF
 L3,Guaguas,L3,Teatro - Tamaraceite,,3,https://www.guaguas.com/lineas/L3,BCE4F6,000000
 32,Guaguas,32,Guiniguada - Auditorio (por San Antonio),,3,https://www.guaguas.com/lineas/32,FFDD00,000000
-64,Guaguas,64,Teatro- Cono Sur,,3,https://www.guaguas.com/lineas/64,B966A1,FFFFFF
+64,Guaguas,64,Medianoche Teatro- Cono Sur,,3,https://www.guaguas.com/lineas/64,B966A1,FFFFFF
 18,Guaguas,18,Puerto - Zona Portuaria,,3,https://www.guaguas.com/lineas/18,009EE0,FFFFFF
 X47,Guaguas,X47,Puerto - Tamaraceite,,3,https://www.guaguas.com/lineas/X47,fe9914,FFFFFF
+X11,Guaguas,X11,Teatro - Las Torres,,3,https://www.guaguas.com/lineas/X11,fe9914,FFFFFF
+49,Guaguas,49,Puerto - Auditorio,,3,https://www.guaguas.com/lineas/49,009EE0,FFFFFF
+65,Guaguas,65,Medianoche Puerto- Tamaraceite,,3,https://www.guaguas.com/lineas/65,B966A1,FFFFFF

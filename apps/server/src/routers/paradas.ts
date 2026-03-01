@@ -58,6 +58,7 @@ export const paradasRouter = router({
       }
 
       try {
+        console.warn(response.body)
         const outputData = APIResponseSchema.parse(response.body)
         const stopDataFromJSON = stops.find(({ id }) => parseInt(id) === input.id)
         const stopProcessedData: z.infer<typeof OutputSchema> = {
