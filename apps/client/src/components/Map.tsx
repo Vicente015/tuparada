@@ -2,12 +2,12 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { layers, namedFlavor } from '@protomaps/basemaps'
 import stopsJSON from '@tuparada/server/src/data/paradas.json'
 import { useGeolocation } from '@uidotdev/usehooks'
-import type { FeatureCollection, LineString } from 'geojson'
+// import type { FeatureCollection, LineString } from 'geojson'
 import maplibregl, { type LngLatBoundsLike } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Map as MapGL, type MapRef, Marker, type ViewStateChangeEvent } from 'react-map-gl'
-import { trpc } from '../utils/trpc'
+// import { trpc } from '../utils/trpc'
 import CircleMunicipal from './icons/CircleMunicipal'
 import StopMunicipal from './icons/StopMunicipal'
 import LocationButton from './LocationButton'
@@ -33,9 +33,9 @@ export default function Map () {
   const theme: 'light' | 'dark' = 'light'
   const mapRef = useRef<MapRef | null>(null)
   const [filteredStops, setFilteredStops] = useState<typeof stops>([])
-  const { data: linesData } = trpc.lineas.get.useQuery(undefined, {
+  /* const { data: linesData } = trpc.lineas.get.useQuery(undefined, {
     cacheTime: 24 * 60 * 60 * 1000
-  })
+  }) */
   const [zoom, setZoom] = useState(0)
   const geolocation = useGeolocation()
   const [showUserLocation, setShowUserLocation] = useState(false)
@@ -44,7 +44,7 @@ export default function Map () {
   const baseLayers = layers('protomaps', namedFlavor('light'), { lang: 'es' })
   const filteredLayers = removeAllPOIs(baseLayers)
 
-  const geojson: FeatureCollection<LineString> = useMemo(() => ({
+  /*   const geojson: FeatureCollection<LineString> = useMemo(() => ({
     type: 'FeatureCollection',
     features: (linesData ?? []).map((line) => ({
       id: 'lines-map-data-element',
@@ -55,7 +55,7 @@ export default function Map () {
         coordinates: line.coordinates
       }
     }))
-  }), [linesData])
+  }), [linesData]) */
 
   useEffect(() => {
     const protocol = new Protocol()
@@ -69,7 +69,7 @@ export default function Map () {
     const map = mapRef.current
     if (map === null) return
 
-    map.once('load', (ev) => {
+    map.once('load', () => {
 
     })
   }, [mapRef.current])
@@ -131,6 +131,7 @@ export default function Map () {
       cooperativeGestures={false}
       onDragEnd={handleZoom}
       onZoomEnd={handleZoom}
+      // @ts-expect-error ignore
       maxBounds={MAX_BOUNDS}
       mapStyle={{
         version: 8,
@@ -150,6 +151,7 @@ export default function Map () {
         transition: {
           duration: 0
         },
+        // @ts-expect-error ignore
         layers: [
           ...filteredLayers
           /*           {
