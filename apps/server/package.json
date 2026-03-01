@@ -19,7 +19,7 @@
     "build": "tsc -b && copyfiles src/data/transit/*.csv dist/",
     "start": "node dist/src/server.js",
     "start:prod": "NODE_ENV=production node --env-file=.env dist/src/server.js",
-    "start:dev": "NODE_ENV=development node --env-file=.env dist/src/server.js",
+    "start:dev": "NODE_ENV=development node dist/src/server.js",
     "prod": "pnpm run build && pnpm run start:prod",
     "dev": "pnpm run build && pnpm run start:dev"
   },
