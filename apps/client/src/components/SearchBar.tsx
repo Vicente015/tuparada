@@ -1,7 +1,7 @@
 import * as Ariakit from '@ariakit/react'
 import stops from '@tuparada/server/src/data/paradas.json'
 import { orderByDistance } from 'geolib'
-import { MapPinIcon, SearchIcon } from 'lucide-react'
+import { SearchIcon } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { startTransition, useEffect, useMemo, useState } from 'react'
 import { getMapData } from '../hooks/getMapData'
@@ -23,12 +23,12 @@ export default function SearchBar () {
 
   const [searchValue, setSearchValue] = useState('')
   const [searchLocal, setSearchLocal] = useState(false)
-  const [userLocation, setUserLocation] = useState({
+  const [userLocation] = useState({
     longitude: 0,
     latitude: 0
   })
   const [closerStops, setCloserStops] = useState<typeof coordinates>()
-  const { addClick, addStops, addUserCoords, mapData, numClick, setMapState } = getMapData()
+  const { addStops, addUserCoords, setMapState } = getMapData()
 
   const matches = useMemo(() => {
     const resolvedSearchValue = resolveAcronyms(searchValue)
@@ -47,15 +47,16 @@ export default function SearchBar () {
   }, [])
   useEffect(() => {
     const { latitude, longitude } = userLocation
-    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12)
+    const nearbyCords = orderByDistance({ latitude, longitude }, coordinates).slice(0, 12) as typeof coordinates
     const nearbyStops = nearbyCords.filter(Boolean)
 
     addStops(nearbyStops)
     addUserCoords(userLocation)
-    setCloserStops(nearbyStops as any)
+
+    setCloserStops(nearbyStops)
   }, [userLocation])
 
-  const getUserLocation = () => {
+  /*   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords
@@ -69,7 +70,7 @@ export default function SearchBar () {
         console.error('Error get user location: ', error)
       }
     )
-  }
+  } */
 
   return (
     <Ariakit.ComboboxProvider
@@ -95,7 +96,7 @@ export default function SearchBar () {
 
         {(searchLocal)
           ? (
-              closerStops!.map(({ id, name }) => (
+              closerStops?.map(({ id, name }) => (
                 <Ariakit.ComboboxItem key={id} className="p-2 text-neutral-900 border-b-[1px] border-b-neutral-200">
                   <a className='flex flex-row gap-2' href={`/parada/${id}`}>
                     <span className="min-w-[3.5ch] h-fit text-center p-[0.1rem] bg-neutral-300 font-mono text-sm rounded-sm">{id}</span>
