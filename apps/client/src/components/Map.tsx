@@ -1,14 +1,16 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { layers, namedFlavor } from '@protomaps/basemaps'
 import stopsJSON from '@tuparada/server/src/data/paradas.json'
+import { useGeolocation } from '@uidotdev/usehooks'
 import type { FeatureCollection, LineString } from 'geojson'
 import maplibregl, { type LngLatBoundsLike } from 'maplibre-gl'
 import { Protocol } from 'pmtiles'
-import layers from 'protomaps-themes-base'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Map as MapGL, type MapRef, Marker, type ViewStateChangeEvent } from 'react-map-gl'
 import { trpc } from '../utils/trpc'
 import CircleMunicipal from './icons/CircleMunicipal'
 import StopMunicipal from './icons/StopMunicipal'
+import LocationButton from './LocationButton'
 
 const MAX_BOUNDS: LngLatBoundsLike = [-15.882797, 27.723931, -15.315628, 28.195578]
 
@@ -20,6 +22,13 @@ const stops = stopsJSON
     longitude: parseFloat(item.longitude ?? '0')
   }))
 
+function removeAllPOIs (baseLayers: maplibregl.LayerSpecification[]) {
+  return baseLayers.filter(layer =>
+    !layer.id?.includes('poi') &&
+    !layer.id?.includes('pois')
+  )
+}
+
 export default function Map () {
   const theme: 'light' | 'dark' = 'light'
   const mapRef = useRef<MapRef | null>(null)
@@ -28,6 +37,12 @@ export default function Map () {
     cacheTime: 24 * 60 * 60 * 1000
   })
   const [zoom, setZoom] = useState(0)
+  const geolocation = useGeolocation()
+  const [showUserLocation, setShowUserLocation] = useState(false)
+
+  // Get base layers and apply filter
+  const baseLayers = layers('protomaps', namedFlavor('light'), { lang: 'es' })
+  const filteredLayers = removeAllPOIs(baseLayers)
 
   const geojson: FeatureCollection<LineString> = useMemo(() => ({
     type: 'FeatureCollection',
@@ -79,6 +94,19 @@ export default function Map () {
     )
   }, [filteredStops, zoom])
 
+  useEffect(() => {
+    if (showUserLocation && !geolocation.loading && geolocation.latitude != null && geolocation.longitude != null) {
+      mapRef.current?.flyTo({ center: [geolocation.longitude, geolocation.latitude], zoom: 15 })
+    }
+  }, [showUserLocation, geolocation.loading, geolocation.latitude, geolocation.longitude])
+
+  const handleLocate = () => {
+    setShowUserLocation(true)
+    if (!geolocation.loading && geolocation.latitude != null && geolocation.longitude != null) {
+      mapRef.current?.flyTo({ center: [geolocation.longitude, geolocation.latitude], zoom: 15 })
+    }
+  }
+
   const handleZoom = (e: ViewStateChangeEvent) => {
     const { zoom: newZoom } = e.viewState
     console.debug('newZoom', newZoom)
@@ -96,6 +124,7 @@ export default function Map () {
   }
 
   return (
+    <div style={{ position: 'relative', width: '100%' }}>
     <MapGL
       ref={mapRef}
       style={{ width: '100%', height: 600 }}
@@ -107,7 +136,7 @@ export default function Map () {
         version: 8,
         glyphs:
           'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
-        sprite: `https://protomaps.github.io/basemaps-assets/sprites/v3/${theme}`,
+        sprite: `https://protomaps.github.io/basemaps-assets/sprites/v4/${theme}`,
         sources: {
           protomaps: {
             type: 'vector',
@@ -121,8 +150,8 @@ export default function Map () {
         transition: {
           duration: 0
         },
-        // @ts-expect-error ignore pls
-        layers: [...layers('protomaps', theme)
+        layers: [
+          ...filteredLayers
           /*           {
             id: 'lines-fill',
             type: 'line',
@@ -156,6 +185,28 @@ export default function Map () {
       mapLib={maplibregl}
     >
       {markers}
+      {showUserLocation && !geolocation.loading && geolocation.latitude != null && geolocation.longitude != null && (
+        <Marker
+          latitude={geolocation.latitude}
+          longitude={geolocation.longitude}
+          anchor='center'
+        >
+          <div
+            style={{
+              width: 16,
+              height: 16,
+              borderRadius: '50%',
+              backgroundColor: '#4285F4',
+              border: '3px solid white',
+              boxShadow: '0 0 6px rgba(66,133,244,0.5)'
+            }}
+          />
+        </Marker>
+      )}
     </MapGL>
+    <div className="fixed bottom-4 right-4 z-10 md:absolute md:bottom-4 md:right-4">
+      <LocationButton onLocate={handleLocate} />
+    </div>
+    </div>
   )
 }
