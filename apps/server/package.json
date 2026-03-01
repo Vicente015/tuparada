@@ -17,7 +17,7 @@
   "packageManager": "pnpm@9.11.0",
   "scripts": {
     "build": "tsc -b && copyfiles src/data/transit/*.csv dist/",
-    "start": "deno dist/src/server.js",
+    "start": "node dist/src/server.js",
     "start:prod": "NODE_ENV=production node --env-file=.env dist/src/server.js",
     "start:dev": "NODE_ENV=development node --env-file=.env dist/src/server.js",
     "prod": "pnpm run build && pnpm run start:prod",
