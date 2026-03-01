@@ -16,7 +16,7 @@ module.exports = {
     'plugin:sort/recommended'
   ],
   plugins: ['react'],
-  ignorePatterns: ['./src/', '**/dist'],
+  ignorePatterns: ['./src/', '**/dist', '*.json'],
   parserOptions: {
     project: ['tsconfig.eslint.json', 'apps/client/tsconfig.json', 'apps/server/tsconfig.json'],
     tsConfigRootDir: __dirname,

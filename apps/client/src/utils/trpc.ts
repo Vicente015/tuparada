@@ -1,6 +1,6 @@
 import '@trpc/server'
 import { createTRPCReact } from '@trpc/react-query'
-import type { AppRouter } from 'server/src/routers/_app'
+import type { AppRouter } from '@tuparada/server/src/routers/_app'
 
 /**
  * Based on the following documentation:

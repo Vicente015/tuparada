@@ -135,9 +135,7 @@
   },
   {
     "id": "24",
-    "name": "C/ PRESIDENTE ALVEAR (IGLESIA DEL PINO)",
-    "latitude": "28.13563600",
-    "longitude": "-15.43043400"
+    "name": "C/ PRESIDENTE ALVEAR (IGLESIA DEL PINO)"
   },
   {
     "id": "25",
@@ -154,8 +152,8 @@
   {
     "id": "27",
     "name": "C/ EDUARDO BENOT, FRENTE 23",
-    "latitude": "28.14386799",
-    "longitude": "-15.42982051"
+    "latitude": "28.14579259",
+    "longitude": "-15.42933876"
   },
   {
     "id": "28",
@@ -178,8 +176,8 @@
   {
     "id": "31",
     "name": "C/ JUAN REJÓN (CASTILLO DE LA LUZ)",
-    "latitude": "28.14917339",
-    "longitude": "-15.42531031"
+    "latitude": "28.14813540",
+    "longitude": "-15.42597550"
   },
   {
     "id": "33",
@@ -922,8 +920,8 @@
   {
     "id": "157",
     "name": "HOYA DE LA PLATA",
-    "latitude": "28.06973169",
-    "longitude": "-15.41814313"
+    "latitude": "28.07070096",
+    "longitude": "-15.41873849"
   },
   {
     "id": "158",
@@ -981,7 +979,9 @@
   },
   {
     "id": "167",
-    "name": "AVDA. MARÍTIMA DEL SUR (ESCUELA DE ARTE)"
+    "name": "AVDA. MARÍTIMA DEL SUR (ESCUELA DE ARTE)",
+    "latitude": "28.06737105",
+    "longitude": "-15.42912693"
   },
   {
     "id": "168",
@@ -1141,9 +1141,7 @@
   },
   {
     "id": "194",
-    "name": "CARRETERA EL CARDON (ROTONDA)",
-    "latitude": "28.11842316",
-    "longitude": "-15.45322759"
+    "name": "CARRETERA EL CARDON (ROTONDA)"
   },
   {
     "id": "195",
@@ -2257,7 +2255,9 @@
   },
   {
     "id": "383",
-    "name": "CARRETERA DE LOMO BLANCO (PUENTE AÉREO)"
+    "name": "BENARTEMI",
+    "latitude": "28.15219773",
+    "longitude": "-15.42291693"
   },
   {
     "id": "384",
@@ -2896,8 +2896,8 @@
   {
     "id": "491",
     "name": "CARRETERA DE CHILE, 45",
-    "latitude": "28.12343135",
-    "longitude": "-15.44673943"
+    "latitude": "28.12378982",
+    "longitude": "-15.44678604"
   },
   {
     "id": "492",
@@ -3255,7 +3255,9 @@
   },
   {
     "id": "559",
-    "name": "C/ PINO APOLINARIO, 86"
+    "name": "C/ PINO APOLINARIO, 86",
+    "latitude": "28.07518313",
+    "longitude": "-15.42389207"
   },
   {
     "id": "560",
@@ -4000,8 +4002,8 @@
   {
     "id": "693",
     "name": "C/ JUDAS TADEO, 36",
-    "latitude": "28.09112199",
-    "longitude": "-15.48354604"
+    "latitude": "28.09114964",
+    "longitude": "-15.48316848"
   },
   {
     "id": "694",
@@ -4845,9 +4847,7 @@
   },
   {
     "id": "962",
-    "name": "INTERCAMBIADOR SANTA CATALINA",
-    "latitude": "28.13953081",
-    "longitude": "-15.42857164"
+    "name": "INTERCAMBIADOR SANTA CATALINA"
   },
   {
     "id": "963",
@@ -4906,8 +4906,8 @@
   {
     "id": "974",
     "name": "C/ SALAMANCA, 171 (PEDRO HIDALGO)",
-    "latitude": "28.06737105",
-    "longitude": "-15.42912693"
+    "latitude": "28.06845451",
+    "longitude": "-15.42834592"
   },
   {
     "id": "975",

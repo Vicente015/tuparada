@@ -1,7 +1,7 @@
 import type { inferRouterOutputs } from '@trpc/server'
 import { useEffect, useMemo, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
-import type { AppRouter } from 'server/src/routers/_app'
+import type { AppRouter } from '@tuparada/server/src/routers/_app'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { trpc } from '../utils/trpc'
 type IncomingBusType = inferRouterOutputs<AppRouter>['paradas']['get']['lines'][number]
@@ -55,7 +55,7 @@ const Stop: React.FC<Props> = ({ stop }) => {
               ))
           }
         </div>
-          <p className='text-right text-[1rem] text-neutral-600'>Última actualización: {lastUpdate.toLocaleString('es-es', { timeStyle: 'medium', dateStyle: 'medium' })}</p>
+          <p className='text-right text-[1rem] text-neutral-600 mt-4'>Última actualización: {lastUpdate.toLocaleString('es-es', { timeStyle: 'medium', dateStyle: 'medium' })}</p>
       </section>
       <section className='flex flex-col bg-neutral-50 h-full max-w-[90ch] m-auto font-medium text-neutral-900'>
         <div className='flex flex-row p-3 pb-0 gap-2 items-center w-full text-neutral-700'>
@@ -63,7 +63,7 @@ const Stop: React.FC<Props> = ({ stop }) => {
           <p>Destino</p>
           <p className='ml-auto'>Llegada</p>
         </div>
-        {isSuccess
+        {isSuccess && data.lines.length > 0
           ? data?.lines.map((data, index) => (
             <IncomingBus key={index} {...data}/>
           ))
